@@ -6,9 +6,11 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Briefcase, Eye, Send, Star, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 const StudentDashboard = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
 
   // Mock data for dashboard stats
   const stats = {
@@ -56,6 +58,13 @@ const StudentDashboard = () => {
       postedDate: '3 days ago',
     },
   ];
+
+  const handleApplyNow = (internshipTitle: string) => {
+    toast({
+      title: "Application Submitted!",
+      description: `Your application for ${internshipTitle} has been submitted successfully.`,
+    });
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -179,15 +188,25 @@ const StudentDashboard = () => {
                         <span className="text-sm font-medium text-green-600">{internship.stipend}</span>
                         <span className="text-xs text-gray-500">{internship.postedDate}</span>
                       </div>
-                      <Button size="sm" className="w-full mt-3">
+                      <Button 
+                        size="sm" 
+                        className="w-full mt-3 bg-primary hover:bg-primary/90"
+                        onClick={() => handleApplyNow(internship.title)}
+                      >
                         Apply Now
                       </Button>
                     </div>
                   ))}
                 </div>
-                <div className="mt-6">
+                <div className="mt-6 space-y-2">
                   <Button asChild variant="outline" className="w-full">
-                    <Link to="/internships">Browse All Internships</Link>
+                    <Link to="/paid-internships">Browse Paid Internships</Link>
+                  </Button>
+                  <Button asChild variant="outline" className="w-full">
+                    <Link to="/free-internships">Browse Free Internships</Link>
+                  </Button>
+                  <Button asChild variant="outline" className="w-full">
+                    <Link to="/free-courses">Browse Free Courses</Link>
                   </Button>
                 </div>
               </CardContent>

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import Navigation from '../components/Navigation';
@@ -29,47 +28,47 @@ const CompanyDashboard = () => {
 
   // Mock data for dashboard stats
   const stats = {
-    activeInternships: 5,
-    totalApplications: 47,
-    interviewsScheduled: 12,
-    positionsHired: 3,
+    activeInternships: 3,
+    totalApplications: 25,
+    interviewsScheduled: 8,
+    positionsHired: 2,
   };
 
-  // Mock active internships
-  const activeInternships = [
+  // Mock free internships posted by company
+  const freeInternships = [
     {
       id: 1,
-      title: 'Software Developer Intern',
-      applications: 15,
+      title: 'Content Writing Intern',
+      applications: 8,
       status: 'active',
       postedDate: '1 week ago',
       applicants: [
-        { name: 'John Doe', status: 'pending' },
-        { name: 'Jane Smith', status: 'shortlisted' },
-        { name: 'Mike Johnson', status: 'interviewed' },
+        { name: 'Sarah Johnson', status: 'pending' },
+        { name: 'Mike Chen', status: 'shortlisted' },
+        { name: 'Emily Davis', status: 'interviewed' },
       ]
     },
     {
       id: 2,
-      title: 'Marketing Intern',
-      applications: 8,
+      title: 'Social Media Marketing Intern',
+      applications: 12,
       status: 'active',
       postedDate: '3 days ago',
       applicants: [
-        { name: 'Sarah Wilson', status: 'pending' },
-        { name: 'Tom Brown', status: 'shortlisted' },
+        { name: 'Alex Wilson', status: 'pending' },
+        { name: 'Jessica Brown', status: 'shortlisted' },
       ]
     },
     {
       id: 3,
-      title: 'Data Science Intern',
-      applications: 24,
+      title: 'UI/UX Design Intern',
+      applications: 15,
       status: 'active',
       postedDate: '2 weeks ago',
       applicants: [
-        { name: 'Emily Davis', status: 'interviewed' },
-        { name: 'Alex Chen', status: 'hired' },
-        { name: 'Maria Garcia', status: 'shortlisted' },
+        { name: 'David Kim', status: 'interviewed' },
+        { name: 'Lisa Garcia', status: 'hired' },
+        { name: 'Tom Anderson', status: 'shortlisted' },
       ]
     },
   ];
@@ -83,11 +82,10 @@ const CompanyDashboard = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would save to database
-    console.log('New internship posted:', newInternship);
+    console.log('New free internship posted:', newInternship);
     toast({
-      title: "Internship Posted!",
-      description: "Your internship has been successfully posted.",
+      title: "Free Internship Posted!",
+      description: "Your free internship has been successfully posted.",
     });
     setIsDialogOpen(false);
     setNewInternship({
@@ -98,6 +96,41 @@ const CompanyDashboard = () => {
       duration: '',
       stipend: '',
       type: 'full-time',
+    });
+  };
+
+  const handleViewProfile = (applicantName: string) => {
+    toast({
+      title: "Profile Viewed",
+      description: `Viewing ${applicantName}'s profile details.`,
+    });
+  };
+
+  const handleShortlist = (applicantName: string) => {
+    toast({
+      title: "Applicant Shortlisted",
+      description: `${applicantName} has been shortlisted successfully.`,
+    });
+  };
+
+  const handleScheduleInterview = (applicantName: string) => {
+    toast({
+      title: "Interview Scheduled",
+      description: `Interview scheduled with ${applicantName}.`,
+    });
+  };
+
+  const handleViewAllApplications = (internshipTitle: string) => {
+    toast({
+      title: "Applications Viewed",
+      description: `Viewing all applications for ${internshipTitle}.`,
+    });
+  };
+
+  const handleEditPosting = (internshipTitle: string) => {
+    toast({
+      title: "Edit Posting",
+      description: `Editing ${internshipTitle} posting.`,
     });
   };
 
@@ -124,22 +157,23 @@ const CompanyDashboard = () => {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Company Dashboard</h1>
-            <p className="text-gray-600 mt-2">Manage your internships and review applications</p>
+            <p className="text-gray-600 mt-2">Manage your free internships and review applications</p>
           </div>
           
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="flex items-center space-x-2">
+              <Button className="flex items-center space-x-2 bg-primary hover:bg-primary/90">
                 <Plus className="h-4 w-4" />
-                <span>Post New Internship</span>
+                <span>Post Free Internship</span>
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl">
               <DialogHeader>
-                <DialogTitle>Post New Internship</DialogTitle>
-                <DialogDescription>Create a new internship posting for students to apply to.</DialogDescription>
+                <DialogTitle>Post Free Internship</DialogTitle>
+                <DialogDescription>Create a new free internship posting for students to apply to.</DialogDescription>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
+                
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="title">Job Title</Label>
@@ -148,7 +182,7 @@ const CompanyDashboard = () => {
                       name="title"
                       value={newInternship.title}
                       onChange={handleInputChange}
-                      placeholder="e.g., Software Developer Intern"
+                      placeholder="e.g., Content Writing Intern"
                       required
                     />
                   </div>
@@ -159,13 +193,13 @@ const CompanyDashboard = () => {
                       name="location"
                       value={newInternship.location}
                       onChange={handleInputChange}
-                      placeholder="e.g., Remote, New York, NY"
+                      placeholder="e.g., Remote, Mumbai, India"
                       required
                     />
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="duration">Duration</Label>
                     <Input
@@ -174,17 +208,6 @@ const CompanyDashboard = () => {
                       value={newInternship.duration}
                       onChange={handleInputChange}
                       placeholder="e.g., 3 months"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="stipend">Stipend</Label>
-                    <Input
-                      id="stipend"
-                      name="stipend"
-                      value={newInternship.stipend}
-                      onChange={handleInputChange}
-                      placeholder="e.g., $1500/month"
                       required
                     />
                   </div>
@@ -232,7 +255,7 @@ const CompanyDashboard = () => {
                   <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                     Cancel
                   </Button>
-                  <Button type="submit">Post Internship</Button>
+                  <Button type="submit" className="bg-primary hover:bg-primary/90">Post Internship</Button>
                 </div>
               </form>
             </DialogContent>
@@ -243,7 +266,7 @@ const CompanyDashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Internships</CardTitle>
+              <CardTitle className="text-sm font-medium">Active Free Internships</CardTitle>
               <Briefcase className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -259,7 +282,7 @@ const CompanyDashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.totalApplications}</div>
-              <p className="text-xs text-muted-foreground">+12 from last week</p>
+              <p className="text-xs text-muted-foreground">+5 from last week</p>
             </CardContent>
           </Card>
 
@@ -270,7 +293,7 @@ const CompanyDashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.interviewsScheduled}</div>
-              <p className="text-xs text-muted-foreground">+3 from last week</p>
+              <p className="text-xs text-muted-foreground">+2 from last week</p>
             </CardContent>
           </Card>
 
@@ -286,15 +309,15 @@ const CompanyDashboard = () => {
           </Card>
         </div>
 
-        {/* Active Internships */}
+        {/* Free Internships */}
         <Card>
           <CardHeader>
-            <CardTitle>Active Internships</CardTitle>
-            <CardDescription>Manage your posted internships and review applications</CardDescription>
+            <CardTitle>Active Free Internships</CardTitle>
+            <CardDescription>Manage your posted free internships and review applications</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
-              {activeInternships.map((internship) => (
+              {freeInternships.map((internship) => (
                 <div key={internship.id} className="border rounded-lg p-6">
                   <div className="flex justify-between items-start mb-4">
                     <div>
@@ -314,16 +337,28 @@ const CompanyDashboard = () => {
                         <span className="font-medium">{applicant.name}</span>
                         <div className="flex items-center space-x-2">
                           {getStatusBadge(applicant.status)}
-                          <Button size="sm" variant="outline">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => handleViewProfile(applicant.name)}
+                          >
                             View Profile
                           </Button>
                           {applicant.status === 'pending' && (
-                            <Button size="sm">
+                            <Button 
+                              size="sm"
+                              onClick={() => handleShortlist(applicant.name)}
+                              className="bg-primary hover:bg-primary/90"
+                            >
                               Shortlist
                             </Button>
                           )}
                           {applicant.status === 'shortlisted' && (
-                            <Button size="sm">
+                            <Button 
+                              size="sm"
+                              onClick={() => handleScheduleInterview(applicant.name)}
+                              className="bg-primary hover:bg-primary/90"
+                            >
                               Interview
                             </Button>
                           )}
@@ -333,10 +368,18 @@ const CompanyDashboard = () => {
                   </div>
                   
                   <div className="flex justify-end mt-4 space-x-2">
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleViewAllApplications(internship.title)}
+                    >
                       View All Applications
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleEditPosting(internship.title)}
+                    >
                       Edit Posting
                     </Button>
                   </div>

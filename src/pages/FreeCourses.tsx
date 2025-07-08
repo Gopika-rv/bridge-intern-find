@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 const FreeCourses = () => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
   const [enrolledCourses, setEnrolledCourses] = useState<number[]>([]);
   const [completedCourses, setCompletedCourses] = useState<number[]>([]);
 
@@ -75,7 +75,7 @@ const FreeCourses = () => {
   const filteredCourses = freeCourses.filter(course => {
     const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          course.instructor.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = !categoryFilter || course.category === categoryFilter;
+    const matchesCategory = categoryFilter === 'all' || course.category === categoryFilter;
     
     return matchesSearch && matchesCategory;
   });
@@ -104,8 +104,13 @@ const FreeCourses = () => {
     // Simulate certificate download
     toast({
       title: "Certificate Downloaded!",
-      description: `Your certificate for ${courseTitle} has been downloaded.`,
+      description: `Your certificate for ${courseTitle} has been downloaded successfully.`,
     });
+  };
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setCategoryFilter('all');
   };
 
   return (
@@ -119,7 +124,7 @@ const FreeCourses = () => {
         </div>
 
         {/* Filters */}
-        <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
           <Input
             placeholder="Search courses or instructors..."
             value={searchTerm}
@@ -130,13 +135,16 @@ const FreeCourses = () => {
               <SelectValue placeholder="Filter by category" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Categories</SelectItem>
+              <SelectItem value="all">All Categories</SelectItem>
               <SelectItem value="Technology">Technology</SelectItem>
               <SelectItem value="Marketing">Marketing</SelectItem>
               <SelectItem value="Analytics">Analytics</SelectItem>
               <SelectItem value="Soft Skills">Soft Skills</SelectItem>
             </SelectContent>
           </Select>
+          <Button onClick={clearFilters} variant="outline">
+            Clear Filters
+          </Button>
         </div>
 
         {/* Courses Grid */}
@@ -182,7 +190,7 @@ const FreeCourses = () => {
                     {!enrolledCourses.includes(course.id) ? (
                       <Button 
                         onClick={() => handleEnroll(course.id, course.title)}
-                        className="w-full bg-blue-600 hover:bg-blue-700"
+                        className="w-full bg-primary hover:bg-primary/90"
                       >
                         Enroll Now - Free
                       </Button>
@@ -206,7 +214,7 @@ const FreeCourses = () => {
                         </Badge>
                         <Button 
                           onClick={() => handleDownloadCertificate(course.title)}
-                          className="w-full flex items-center justify-center space-x-2"
+                          className="w-full flex items-center justify-center space-x-2 bg-primary hover:bg-primary/90"
                         >
                           <Download className="h-4 w-4" />
                           <span>Download Certificate</span>
@@ -222,7 +230,10 @@ const FreeCourses = () => {
 
         {filteredCourses.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500">No courses found matching your criteria.</p>
+            <p className="text-gray-500 mb-4">No courses found matching your criteria.</p>
+            <Button onClick={clearFilters} className="bg-primary hover:bg-primary/90">
+              Clear All Filters
+            </Button>
           </div>
         )}
       </div>
