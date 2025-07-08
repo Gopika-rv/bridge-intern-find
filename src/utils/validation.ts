@@ -1,11 +1,22 @@
 
+export const validateName = (name: string): boolean => {
+  return name.trim().length > 0;
+};
+
 export const validateGmail = (email: string): boolean => {
-  return email.endsWith('@gmail.com');
+  return email.endsWith('@gmail.com') && email.length > 10;
 };
 
 export const validateIndianPhone = (phone: string): boolean => {
   const phoneRegex = /^[6-9]\d{9}$/;
   return phoneRegex.test(phone);
+};
+
+export const validatePassword = (password: string, isCompany: boolean = false): boolean => {
+  if (isCompany) {
+    return validateStrongPassword(password);
+  }
+  return password.length >= 6;
 };
 
 export const validateStrongPassword = (password: string): boolean => {
@@ -18,21 +29,27 @@ export const validateStrongPassword = (password: string): boolean => {
   return password.length >= minLength && hasUppercase && hasLowercase && hasNumber && hasSpecialChar;
 };
 
-export const getValidationErrors = (email: string, phone: string, password: string, isCompany: boolean = false) => {
+export const getValidationErrors = (formData: any, isCompany: boolean = false) => {
   const errors: string[] = [];
   
-  if (!validateGmail(email)) {
+  if (!validateName(formData.name || formData.companyName || '')) {
+    errors.push(isCompany ? 'Company name cannot be blank' : 'Name cannot be blank');
+  }
+  
+  if (!validateGmail(formData.email || '')) {
     errors.push('Email must be a valid @gmail.com address');
   }
   
-  if (!validateIndianPhone(phone)) {
+  if (!validateIndianPhone(formData.phone || '')) {
     errors.push('Phone must be a valid 10-digit Indian number starting with 6, 7, 8, or 9');
   }
   
-  if (isCompany && !validateStrongPassword(password)) {
-    errors.push('Password must be at least 8 characters with uppercase, lowercase, number, and special character');
-  } else if (!isCompany && password.length < 6) {
-    errors.push('Password must be at least 6 characters');
+  if (!validatePassword(formData.password || '', isCompany)) {
+    if (isCompany) {
+      errors.push('Password must be at least 8 characters with uppercase, lowercase, number, and special character');
+    } else {
+      errors.push('Password must be at least 6 characters');
+    }
   }
   
   return errors;

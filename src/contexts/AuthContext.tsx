@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { getValidationErrors } from '../utils/validation';
 
 interface User {
   id: string;
@@ -31,27 +32,62 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (email: string, password: string, userType: 'student' | 'company') => {
-    // Simulate login - in real app, this would connect to your database
-    const mockUser: User = {
-      id: Date.now().toString(),
-      name: email.split('@')[0],
-      email,
+    // Simulate checking if user exists in database
+    const registeredUsers = JSON.parse(localStorage.getItem('internconnect_registered_users') || '[]');
+    const existingUser = registeredUsers.find((u: any) => 
+      u.email === email && u.userType === userType && u.password === password
+    );
+
+    if (!existingUser) {
+      throw new Error('Invalid credentials');
+    }
+    
+    const loginUser: User = {
+      id: existingUser.id,
+      name: existingUser.name || existingUser.companyName,
+      email: existingUser.email,
       userType,
+      profile: existingUser,
     };
     
-    setUser(mockUser);
-    localStorage.setItem('internconnect_user', JSON.stringify(mockUser));
+    setUser(loginUser);
+    localStorage.setItem('internconnect_user', JSON.stringify(loginUser));
     return true;
   };
 
   const register = async (userData: any, userType: 'student' | 'company') => {
-    // Simulate registration - in real app, this would connect to your database
-    const newUser: User = {
+    // Validate form data
+    const errors = getValidationErrors(userData, userType === 'company');
+    if (errors.length > 0) {
+      throw new Error(errors.join(', '));
+    }
+
+    // Check if user already exists
+    const registeredUsers = JSON.parse(localStorage.getItem('internconnect_registered_users') || '[]');
+    const existingUser = registeredUsers.find((u: any) => u.email === userData.email);
+    
+    if (existingUser) {
+      throw new Error('User with this email already exists');
+    }
+
+    // Create new user record
+    const newUserRecord = {
       id: Date.now().toString(),
-      name: userData.name,
+      ...userData,
+      userType,
+      createdAt: new Date().toISOString(),
+    };
+
+    // Save to simulated database
+    registeredUsers.push(newUserRecord);
+    localStorage.setItem('internconnect_registered_users', JSON.stringify(registeredUsers));
+    
+    const newUser: User = {
+      id: newUserRecord.id,
+      name: userData.name || userData.companyName,
       email: userData.email,
       userType,
-      profile: userData,
+      profile: newUserRecord,
     };
     
     setUser(newUser);
@@ -69,6 +105,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const updatedUser = { ...user, profile: { ...user.profile, ...profileData } };
       setUser(updatedUser);
       localStorage.setItem('internconnect_user', JSON.stringify(updatedUser));
+      
+      // Update in registered users database
+      const registeredUsers = JSON.parse(localStorage.getItem('internconnect_registered_users') || '[]');
+      const userIndex = registeredUsers.findIndex((u: any) => u.id === user.id);
+      if (userIndex !== -1) {
+        registeredUsers[userIndex] = { ...registeredUsers[userIndex], ...profileData };
+        localStorage.setItem('internconnect_registered_users', JSON.stringify(registeredUsers));
+      }
     }
   };
 

@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -25,8 +26,9 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					DEFAULT: '#0A66C2',
+					foreground: '#FFFFFF',
+					dark: '#004182'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -41,7 +43,7 @@ export default {
 					foreground: 'hsl(var(--muted-foreground))'
 				},
 				accent: {
-					DEFAULT: 'hsl(var(--accent))',
+					DEFAULT: '#1E90FF',
 					foreground: 'hsl(var(--accent-foreground))'
 				},
 				popover: {
@@ -61,6 +63,12 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				linkedin: {
+					blue: '#0A66C2',
+					darkblue: '#004182',
+					lightgray: '#F3F6F8',
+					accent: '#1E90FF'
 				}
 			},
 			borderRadius: {
