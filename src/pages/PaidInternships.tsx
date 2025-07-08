@@ -114,7 +114,7 @@ const PaidInternships = () => {
               <SelectValue placeholder="Filter by domain" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Domains</SelectItem>
+              <SelectItem value="all">All Domains</SelectItem>
               <SelectItem value="Technology">Technology</SelectItem>
               <SelectItem value="Marketing">Marketing</SelectItem>
               <SelectItem value="Design">Design</SelectItem>

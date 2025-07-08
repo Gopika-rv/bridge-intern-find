@@ -144,6 +144,12 @@ const Internships = () => {
     setApplicationText('');
   };
 
+  const clearAllFilters = () => {
+    setSearchTerm('');
+    setLocationFilter('');
+    setDomainFilter('');
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation />
@@ -180,10 +186,10 @@ const Internships = () => {
               
               <Select value={domainFilter} onValueChange={setDomainFilter}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Domain" />
+                  <SelectValue placeholder="Select Domain" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Domains</SelectItem>
+                  <SelectItem value="all">All Domains</SelectItem>
                   <SelectItem value="Technology">Technology</SelectItem>
                   <SelectItem value="Data Science">Data Science</SelectItem>
                   <SelectItem value="Design">Design</SelectItem>
@@ -192,14 +198,7 @@ const Internships = () => {
                 </SelectContent>
               </Select>
               
-              <Button 
-                onClick={() => {
-                  setSearchTerm('');
-                  setLocationFilter('');
-                  setDomainFilter('');
-                }}
-                variant="outline"
-              >
+              <Button onClick={clearAllFilters} variant="outline">
                 Clear Filters
               </Button>
             </div>
@@ -265,14 +264,7 @@ const Internships = () => {
         {filteredInternships.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">No internships found matching your criteria.</p>
-            <Button 
-              onClick={() => {
-                setSearchTerm('');
-                setLocationFilter('');
-                setDomainFilter('');
-              }}
-              className="mt-4"
-            >
+            <Button onClick={clearAllFilters} className="mt-4">
               Clear All Filters
             </Button>
           </div>
