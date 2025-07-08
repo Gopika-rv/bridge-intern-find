@@ -12,6 +12,10 @@ import StudentDashboard from "./pages/StudentDashboard";
 import CompanyDashboard from "./pages/CompanyDashboard";
 import Profile from "./pages/Profile";
 import Internships from "./pages/Internships";
+import PaidInternships from "./pages/PaidInternships";
+import FreeInternships from "./pages/FreeInternships";
+import FreeCourses from "./pages/FreeCourses";
+import MyCertificates from "./pages/MyCertificates";
 import Messages from "./pages/Messages";
 import Notifications from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
@@ -48,6 +52,26 @@ const App = () => (
             <Route path="/internships" element={
               <ProtectedRoute>
                 <Internships />
+              </ProtectedRoute>
+            } />
+            <Route path="/paid-internships" element={
+              <ProtectedRoute userType="student">
+                <PaidInternships />
+              </ProtectedRoute>
+            } />
+            <Route path="/free-internships" element={
+              <ProtectedRoute userType="student">
+                <FreeInternships />
+              </ProtectedRoute>
+            } />
+            <Route path="/free-courses" element={
+              <ProtectedRoute userType="student">
+                <FreeCourses />
+              </ProtectedRoute>
+            } />
+            <Route path="/my-certificates" element={
+              <ProtectedRoute userType="student">
+                <MyCertificates />
               </ProtectedRoute>
             } />
             <Route path="/messages" element={

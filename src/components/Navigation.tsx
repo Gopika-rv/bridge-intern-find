@@ -2,7 +2,7 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from './ui/button';
-import { Bell, MessageSquare, User, Briefcase, Home, LogOut } from 'lucide-react';
+import { Bell, MessageSquare, User, Briefcase, Home, LogOut, GraduationCap, Award } from 'lucide-react';
 
 const Navigation = () => {
   const { user, logout } = useAuth();
@@ -52,17 +52,71 @@ const Navigation = () => {
                 <span>My Profile</span>
               </Link>
               
-              <Link
-                to="/internships"
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive('/internships')
-                    ? 'text-blue-600 bg-blue-50'
-                    : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
-                }`}
-              >
-                <Briefcase className="h-4 w-4" />
-                <span>Internships</span>
-              </Link>
+              {user.userType === 'student' && (
+                <>
+                  <Link
+                    to="/paid-internships"
+                    className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      isActive('/paid-internships')
+                        ? 'text-blue-600 bg-blue-50'
+                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    <Briefcase className="h-4 w-4" />
+                    <span>Paid Internships</span>
+                  </Link>
+                  
+                  <Link
+                    to="/free-internships"
+                    className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      isActive('/free-internships')
+                        ? 'text-blue-600 bg-blue-50'
+                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    <Briefcase className="h-4 w-4" />
+                    <span>Free Internships</span>
+                  </Link>
+                  
+                  <Link
+                    to="/free-courses"
+                    className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      isActive('/free-courses')
+                        ? 'text-blue-600 bg-blue-50'
+                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    <GraduationCap className="h-4 w-4" />
+                    <span>Free Courses</span>
+                  </Link>
+                  
+                  <Link
+                    to="/my-certificates"
+                    className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      isActive('/my-certificates')
+                        ? 'text-blue-600 bg-blue-50'
+                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    <Award className="h-4 w-4" />
+                    <span>Certificates</span>
+                  </Link>
+                </>
+              )}
+              
+              {user.userType === 'company' && (
+                <Link
+                  to="/internships"
+                  className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    isActive('/internships')
+                      ? 'text-blue-600 bg-blue-50'
+                      : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                  }`}
+                >
+                  <Briefcase className="h-4 w-4" />
+                  <span>Internships</span>
+                </Link>
+              )}
               
               <Link
                 to="/messages"

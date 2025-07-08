@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { getValidationErrors } from '../utils/validation';
 
 const Register = () => {
   const [userType, setUserType] = useState<'student' | 'company'>('student');
@@ -18,6 +19,9 @@ const Register = () => {
     password: '',
     confirmPassword: '',
     phone: '',
+    city: '',
+    state: '',
+    country: 'India',
     // Student specific
     education: '',
     skills: '',
@@ -28,6 +32,7 @@ const Register = () => {
     website: '',
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
   
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -38,17 +43,24 @@ const Register = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    // Clear validation errors when user starts typing
+    setValidationErrors([]);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
-      toast({
-        title: "Error",
-        description: "Passwords do not match.",
-        variant: "destructive",
-      });
+      setValidationErrors(['Passwords do not match']);
+      return;
+    }
+
+    // Validate email, phone, and password
+    const errors = getValidationErrors(formData.email, formData.phone, formData.password, userType === 'company');
+    
+    if (errors.length > 0) {
+      setValidationErrors(errors);
       return;
     }
 
@@ -90,6 +102,14 @@ const Register = () => {
             <CardDescription>Join our community of students and companies</CardDescription>
           </CardHeader>
           <CardContent>
+            {validationErrors.length > 0 && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                {validationErrors.map((error, index) => (
+                  <p key={index} className="text-sm text-red-600">{error}</p>
+                ))}
+              </div>
+            )}
+
             <Tabs value={userType} onValueChange={(value) => setUserType(value as 'student' | 'company')}>
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="student">Student</TabsTrigger>
@@ -98,44 +118,45 @@ const Register = () => {
               
               <TabsContent value="student" className="mt-6">
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Full Name</Label>
-                      <Input
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">Phone</Label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Full Name</Label>
+                    <Input
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      required
+                    />
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email">Email (Gmail only)</Label>
                     <Input
                       id="email"
                       name="email"
                       type="email"
                       value={formData.email}
                       onChange={handleInputChange}
+                      placeholder="yourname@gmail.com"
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Phone Number</Label>
+                    <Input
+                      id="phone"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      placeholder="9876543210"
                       required
                     />
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="password">Password</Label>
+                      <Label htmlFor="password">Password (min 6 chars)</Label>
                       <Input
                         id="password"
                         name="password"
@@ -152,6 +173,39 @@ const Register = () => {
                         name="confirmPassword"
                         type="password"
                         value={formData.confirmPassword}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="city">City</Label>
+                      <Input
+                        id="city"
+                        name="city"
+                        value={formData.city}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="state">State</Label>
+                      <Input
+                        id="state"
+                        name="state"
+                        value={formData.state}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="country">Country</Label>
+                      <Input
+                        id="country"
+                        name="country"
+                        value={formData.country}
                         onChange={handleInputChange}
                         required
                       />
@@ -183,7 +237,7 @@ const Register = () => {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="portfolio">Portfolio Link (Optional)</Label>
+                    <Label htmlFor="portfolio">Portfolio/LinkedIn URL (Optional)</Label>
                     <Input
                       id="portfolio"
                       name="portfolio"
@@ -212,39 +266,41 @@ const Register = () => {
                     />
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">Phone</Label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email (Gmail only)</Label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      placeholder="company@gmail.com"
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Phone Number</Label>
+                    <Input
+                      id="phone"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      placeholder="9876543210"
+                      required
+                    />
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="password">Password</Label>
+                      <Label htmlFor="password">Strong Password</Label>
                       <Input
                         id="password"
                         name="password"
                         type="password"
                         value={formData.password}
                         onChange={handleInputChange}
+                        placeholder="Min 8 chars, A-z, 0-9, !@#"
                         required
                       />
                     </div>
@@ -255,6 +311,39 @@ const Register = () => {
                         name="confirmPassword"
                         type="password"
                         value={formData.confirmPassword}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="city">City</Label>
+                      <Input
+                        id="city"
+                        name="city"
+                        value={formData.city}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="state">State</Label>
+                      <Input
+                        id="state"
+                        name="state"
+                        value={formData.state}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="country">Country</Label>
+                      <Input
+                        id="country"
+                        name="country"
+                        value={formData.country}
                         onChange={handleInputChange}
                         required
                       />
