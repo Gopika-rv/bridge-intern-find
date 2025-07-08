@@ -23,7 +23,7 @@ const Navigation = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-8">
-            <Link to="/" className="text-2xl font-bold text-blue-600">
+            <Link to="/" className="text-2xl font-bold text-[#0A66C2]">
               InternConnect
             </Link>
             
@@ -32,8 +32,8 @@ const Navigation = () => {
                 to={user.userType === 'student' ? '/student-dashboard' : '/company-dashboard'}
                 className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive('/student-dashboard') || isActive('/company-dashboard')
-                    ? 'text-blue-600 bg-blue-50'
-                    : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                    ? 'text-[#0A66C2] bg-[#F3F6F8]'
+                    : 'text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50'
                 }`}
               >
                 <Home className="h-4 w-4" />
@@ -44,8 +44,8 @@ const Navigation = () => {
                 to="/profile"
                 className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive('/profile')
-                    ? 'text-blue-600 bg-blue-50'
-                    : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                    ? 'text-[#0A66C2] bg-[#F3F6F8]'
+                    : 'text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50'
                 }`}
               >
                 <User className="h-4 w-4" />
@@ -55,35 +55,23 @@ const Navigation = () => {
               {user.userType === 'student' && (
                 <>
                   <Link
-                    to="/paid-internships"
+                    to="/internships"
                     className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                      isActive('/paid-internships')
-                        ? 'text-blue-600 bg-blue-50'
-                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                      isActive('/internships')
+                        ? 'text-[#0A66C2] bg-[#F3F6F8]'
+                        : 'text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50'
                     }`}
                   >
                     <Briefcase className="h-4 w-4" />
-                    <span>Paid Internships</span>
-                  </Link>
-                  
-                  <Link
-                    to="/free-internships"
-                    className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                      isActive('/free-internships')
-                        ? 'text-blue-600 bg-blue-50'
-                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
-                    }`}
-                  >
-                    <Briefcase className="h-4 w-4" />
-                    <span>Free Internships</span>
+                    <span>Internships</span>
                   </Link>
                   
                   <Link
                     to="/free-courses"
                     className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                       isActive('/free-courses')
-                        ? 'text-blue-600 bg-blue-50'
-                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                        ? 'text-[#0A66C2] bg-[#F3F6F8]'
+                        : 'text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50'
                     }`}
                   >
                     <GraduationCap className="h-4 w-4" />
@@ -94,8 +82,8 @@ const Navigation = () => {
                     to="/my-certificates"
                     className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                       isActive('/my-certificates')
-                        ? 'text-blue-600 bg-blue-50'
-                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                        ? 'text-[#0A66C2] bg-[#F3F6F8]'
+                        : 'text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50'
                     }`}
                   >
                     <Award className="h-4 w-4" />
@@ -104,26 +92,12 @@ const Navigation = () => {
                 </>
               )}
               
-              {user.userType === 'company' && (
-                <Link
-                  to="/internships"
-                  className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    isActive('/internships')
-                      ? 'text-blue-600 bg-blue-50'
-                      : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
-                  }`}
-                >
-                  <Briefcase className="h-4 w-4" />
-                  <span>Internships</span>
-                </Link>
-              )}
-              
               <Link
                 to="/messages"
                 className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive('/messages')
-                    ? 'text-blue-600 bg-blue-50'
-                    : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                    ? 'text-[#0A66C2] bg-[#F3F6F8]'
+                    : 'text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50'
                 }`}
               >
                 <MessageSquare className="h-4 w-4" />
@@ -134,8 +108,8 @@ const Navigation = () => {
                 to="/notifications"
                 className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive('/notifications')
-                    ? 'text-blue-600 bg-blue-50'
-                    : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                    ? 'text-[#0A66C2] bg-[#F3F6F8]'
+                    : 'text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50'
                 }`}
               >
                 <Bell className="h-4 w-4" />
@@ -150,7 +124,7 @@ const Navigation = () => {
               onClick={handleLogout}
               variant="outline"
               size="sm"
-              className="flex items-center space-x-1"
+              className="flex items-center space-x-1 border-[#0A66C2] text-[#0A66C2] hover:bg-[#0A66C2] hover:text-white"
             >
               <LogOut className="h-4 w-4" />
               <span>Logout</span>

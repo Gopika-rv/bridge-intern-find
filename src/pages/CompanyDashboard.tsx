@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import Navigation from '../components/Navigation';
@@ -24,6 +25,7 @@ const CompanyDashboard = () => {
     duration: '',
     stipend: '',
     type: 'full-time',
+    internshipType: 'paid',
   });
 
   // Mock data for dashboard stats
@@ -34,29 +36,33 @@ const CompanyDashboard = () => {
     positionsHired: 2,
   };
 
-  // Mock free internships posted by company
-  const freeInternships = [
+  // Mock internships posted by company (both paid and free)
+  const postedInternships = [
     {
       id: 1,
       title: 'Content Writing Intern',
       applications: 8,
       status: 'active',
       postedDate: '1 week ago',
+      type: 'free',
+      stipend: 'Certificate',
       applicants: [
-        { name: 'Sarah Johnson', status: 'pending' },
-        { name: 'Mike Chen', status: 'shortlisted' },
-        { name: 'Emily Davis', status: 'interviewed' },
+        { name: 'Sarah Johnson', status: 'pending', email: 'sarah@example.com', phone: '9876543210' },
+        { name: 'Mike Chen', status: 'shortlisted', email: 'mike@example.com', phone: '9876543211' },
+        { name: 'Emily Davis', status: 'interviewed', email: 'emily@example.com', phone: '9876543212' },
       ]
     },
     {
       id: 2,
-      title: 'Social Media Marketing Intern',
+      title: 'Software Developer Intern',
       applications: 12,
       status: 'active',
       postedDate: '3 days ago',
+      type: 'paid',
+      stipend: '₹25,000/month',
       applicants: [
-        { name: 'Alex Wilson', status: 'pending' },
-        { name: 'Jessica Brown', status: 'shortlisted' },
+        { name: 'Alex Wilson', status: 'pending', email: 'alex@example.com', phone: '9876543213' },
+        { name: 'Jessica Brown', status: 'shortlisted', email: 'jessica@example.com', phone: '9876543214' },
       ]
     },
     {
@@ -65,10 +71,12 @@ const CompanyDashboard = () => {
       applications: 15,
       status: 'active',
       postedDate: '2 weeks ago',
+      type: 'paid',
+      stipend: '₹20,000/month',
       applicants: [
-        { name: 'David Kim', status: 'interviewed' },
-        { name: 'Lisa Garcia', status: 'hired' },
-        { name: 'Tom Anderson', status: 'shortlisted' },
+        { name: 'David Kim', status: 'interviewed', email: 'david@example.com', phone: '9876543215' },
+        { name: 'Lisa Garcia', status: 'hired', email: 'lisa@example.com', phone: '9876543216' },
+        { name: 'Tom Anderson', status: 'shortlisted', email: 'tom@example.com', phone: '9876543217' },
       ]
     },
   ];
@@ -82,10 +90,10 @@ const CompanyDashboard = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('New free internship posted:', newInternship);
+    console.log('New internship posted:', newInternship);
     toast({
-      title: "Free Internship Posted!",
-      description: "Your free internship has been successfully posted.",
+      title: "Internship Posted!",
+      description: `Your ${newInternship.internshipType} internship has been successfully posted.`,
     });
     setIsDialogOpen(false);
     setNewInternship({
@@ -96,27 +104,28 @@ const CompanyDashboard = () => {
       duration: '',
       stipend: '',
       type: 'full-time',
+      internshipType: 'paid',
     });
   };
 
-  const handleViewProfile = (applicantName: string) => {
+  const handleViewProfile = (applicant: any) => {
     toast({
-      title: "Profile Viewed",
-      description: `Viewing ${applicantName}'s profile details.`,
+      title: "Profile Details",
+      description: `${applicant.name} - ${applicant.email} - ${applicant.phone}`,
     });
   };
 
   const handleShortlist = (applicantName: string) => {
     toast({
       title: "Applicant Shortlisted",
-      description: `${applicantName} has been shortlisted successfully.`,
+      description: `${applicantName} has been shortlisted and notified via email.`,
     });
   };
 
   const handleScheduleInterview = (applicantName: string) => {
     toast({
       title: "Interview Scheduled",
-      description: `Interview scheduled with ${applicantName}.`,
+      description: `Interview invitation sent to ${applicantName}.`,
     });
   };
 
@@ -130,7 +139,7 @@ const CompanyDashboard = () => {
   const handleEditPosting = (internshipTitle: string) => {
     toast({
       title: "Edit Posting",
-      description: `Editing ${internshipTitle} posting.`,
+      description: `Opening editor for ${internshipTitle} posting.`,
     });
   };
 
@@ -157,20 +166,20 @@ const CompanyDashboard = () => {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Company Dashboard</h1>
-            <p className="text-gray-600 mt-2">Manage your free internships and review applications</p>
+            <p className="text-gray-600 mt-2">Manage your internships and review applications</p>
           </div>
           
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="flex items-center space-x-2 bg-primary hover:bg-primary/90">
+              <Button className="flex items-center space-x-2 bg-[#0A66C2] hover:bg-[#004182]">
                 <Plus className="h-4 w-4" />
-                <span>Post Free Internship</span>
+                <span>Post Internship</span>
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl">
               <DialogHeader>
-                <DialogTitle>Post Free Internship</DialogTitle>
-                <DialogDescription>Create a new free internship posting for students to apply to.</DialogDescription>
+                <DialogTitle>Post New Internship</DialogTitle>
+                <DialogDescription>Create a new internship posting for students to apply to.</DialogDescription>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
                 
@@ -199,7 +208,7 @@ const CompanyDashboard = () => {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="duration">Duration</Label>
                     <Input
@@ -223,6 +232,30 @@ const CompanyDashboard = () => {
                       </SelectContent>
                     </Select>
                   </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="internshipType">Internship Type</Label>
+                    <Select value={newInternship.internshipType} onValueChange={(value) => setNewInternship({...newInternship, internshipType: value})}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="paid">Paid</SelectItem>
+                        <SelectItem value="free">Free</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="stipend">Stipend/Compensation</Label>
+                  <Input
+                    id="stipend"
+                    name="stipend"
+                    value={newInternship.stipend}
+                    onChange={handleInputChange}
+                    placeholder="e.g., ₹25,000/month or Certificate"
+                    required
+                  />
                 </div>
                 
                 <div className="space-y-2">
@@ -255,7 +288,7 @@ const CompanyDashboard = () => {
                   <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                     Cancel
                   </Button>
-                  <Button type="submit" className="bg-primary hover:bg-primary/90">Post Internship</Button>
+                  <Button type="submit" className="bg-[#0A66C2] hover:bg-[#004182]">Post Internship</Button>
                 </div>
               </form>
             </DialogContent>
@@ -266,7 +299,7 @@ const CompanyDashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Free Internships</CardTitle>
+              <CardTitle className="text-sm font-medium">Active Internships</CardTitle>
               <Briefcase className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -304,20 +337,20 @@ const CompanyDashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.positionsHired}</div>
-              <p className="text-xs text-muted-foreground">+1 from last month</p>
+              <p className="text-xs text-muted-foreget">+1 from last month</p>
             </CardContent>
           </Card>
         </div>
 
-        {/* Free Internships */}
+        {/* Posted Internships */}
         <Card>
           <CardHeader>
-            <CardTitle>Active Free Internships</CardTitle>
-            <CardDescription>Manage your posted free internships and review applications</CardDescription>
+            <CardTitle>Posted Internships</CardTitle>
+            <CardDescription>Manage your posted internships and review applications</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
-              {freeInternships.map((internship) => (
+              {postedInternships.map((internship) => (
                 <div key={internship.id} className="border rounded-lg p-6">
                   <div className="flex justify-between items-start mb-4">
                     <div>
@@ -326,6 +359,9 @@ const CompanyDashboard = () => {
                     </div>
                     <div className="flex items-center space-x-4">
                       <Badge variant="outline">{internship.applications} applications</Badge>
+                      <Badge className={internship.type === 'paid' ? "bg-green-100 text-green-800" : "bg-blue-100 text-blue-800"}>
+                        {internship.type === 'paid' ? `Paid - ${internship.stipend}` : 'Free - Certificate'}
+                      </Badge>
                       <Badge className="bg-green-100 text-green-800">{internship.status}</Badge>
                     </div>
                   </div>
@@ -340,7 +376,7 @@ const CompanyDashboard = () => {
                           <Button 
                             size="sm" 
                             variant="outline"
-                            onClick={() => handleViewProfile(applicant.name)}
+                            onClick={() => handleViewProfile(applicant)}
                           >
                             View Profile
                           </Button>
@@ -348,7 +384,7 @@ const CompanyDashboard = () => {
                             <Button 
                               size="sm"
                               onClick={() => handleShortlist(applicant.name)}
-                              className="bg-primary hover:bg-primary/90"
+                              className="bg-[#0A66C2] hover:bg-[#004182] text-white"
                             >
                               Shortlist
                             </Button>
@@ -357,7 +393,7 @@ const CompanyDashboard = () => {
                             <Button 
                               size="sm"
                               onClick={() => handleScheduleInterview(applicant.name)}
-                              className="bg-primary hover:bg-primary/90"
+                              className="bg-[#0A66C2] hover:bg-[#004182] text-white"
                             >
                               Interview
                             </Button>

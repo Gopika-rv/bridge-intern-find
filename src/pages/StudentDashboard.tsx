@@ -190,7 +190,7 @@ const StudentDashboard = () => {
                       </div>
                       <Button 
                         size="sm" 
-                        className="w-full mt-3 bg-primary hover:bg-primary/90"
+                        className="w-full mt-3 bg-[#0A66C2] hover:bg-[#004182]"
                         onClick={() => handleApplyNow(internship.title)}
                       >
                         Apply Now
@@ -200,10 +200,7 @@ const StudentDashboard = () => {
                 </div>
                 <div className="mt-6 space-y-2">
                   <Button asChild variant="outline" className="w-full">
-                    <Link to="/paid-internships">Browse Paid Internships</Link>
-                  </Button>
-                  <Button asChild variant="outline" className="w-full">
-                    <Link to="/free-internships">Browse Free Internships</Link>
+                    <Link to="/internships">Browse All Internships</Link>
                   </Button>
                   <Button asChild variant="outline" className="w-full">
                     <Link to="/free-courses">Browse Free Courses</Link>
