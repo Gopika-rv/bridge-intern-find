@@ -1,15 +1,36 @@
 
+import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from './ui/button';
-import { Bell, MessageSquare, User, Briefcase, Home, LogOut, GraduationCap, Award, Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { Badge } from './ui/badge';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger,
+  DropdownMenuSeparator 
+} from './ui/dropdown-menu';
+import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
+import { 
+  User, 
+  LogOut, 
+  Bell, 
+  MessageSquare, 
+  Briefcase, 
+  BookOpen, 
+  Award,
+  Menu,
+  Home,
+  Building,
+  Users
+} from 'lucide-react';
 
 const Navigation = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -18,262 +39,187 @@ const Navigation = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
+  const studentLinks = [
+    { href: '/student-dashboard', label: 'Dashboard', icon: Home },
+    { href: '/internships', label: 'Internships', icon: Briefcase },
+    { href: '/free-courses', label: 'Free Courses', icon: BookOpen },
+    { href: '/achievements', label: 'Achievements', icon: Award },
+    { href: '/messages', label: 'Messages', icon: MessageSquare },
+  ];
 
-  if (!user) return null;
+  const companyLinks = [
+    { href: '/company-dashboard', label: 'Dashboard', icon: Building },
+    { href: '/view-profile', label: 'View Profiles', icon: Users },
+    { href: '/messages', label: 'Messages', icon: MessageSquare },
+  ];
+
+  const links = user?.userType === 'student' ? studentLinks : companyLinks;
+
+  const MobileMenu = () => (
+    <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+      <SheetTrigger asChild>
+        <Button variant="ghost" size="icon" className="md:hidden">
+          <Menu className="h-5 w-5" />
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="left" className="w-64 bg-white">
+        <div className="flex flex-col h-full">
+          <div className="py-4">
+            <Link to="/" className="text-xl font-bold text-[#0A66C2]">
+              InternConnect
+            </Link>
+          </div>
+          
+          <nav className="flex-1 space-y-2">
+            {links.map((link) => {
+              const Icon = link.icon;
+              return (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
+                    isActive(link.href)
+                      ? 'bg-[#0A66C2] text-white'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span>{link.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div className="border-t pt-4 space-y-2">
+            <Link
+              to="/profile"
+              className="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <User className="h-4 w-4" />
+              <span>Profile</span>
+            </Link>
+            <Link
+              to="/notifications"
+              className="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <Bell className="h-4 w-4" />
+              <span>Notifications</span>
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="flex items-center space-x-3 px-3 py-2 rounded-lg text-red-600 hover:bg-red-50 w-full text-left"
+            >
+              <LogOut className="h-4 w-4" />
+              <span>Logout</span>
+            </button>
+          </div>
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
 
   return (
-    <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+    <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <div className="flex items-center">
-            <Link to="/" className="text-xl sm:text-2xl font-bold text-[#0A66C2]">
+          {/* Logo and Mobile Menu */}
+          <div className="flex items-center space-x-4">
+            <MobileMenu />
+            <Link to="/" className="text-xl font-bold text-[#0A66C2]">
               InternConnect
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-6">
-            <Link
-              to={user.userType === 'student' ? '/student-dashboard' : '/company-dashboard'}
-              className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive('/student-dashboard') || isActive('/company-dashboard')
-                  ? 'text-[#0A66C2] bg-[#F3F6F8]'
-                  : 'text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50'
-              }`}
-            >
-              <Home className="h-4 w-4" />
-              <span>Home</span>
-            </Link>
-            
-            <Link
-              to="/profile"
-              className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive('/profile')
-                  ? 'text-[#0A66C2] bg-[#F3F6F8]'
-                  : 'text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50'
-              }`}
-            >
-              <User className="h-4 w-4" />
-              <span>Profile</span>
-            </Link>
-            
-            {user.userType === 'student' && (
-              <>
+          <nav className="hidden md:flex items-center space-x-1">
+            {links.map((link) => {
+              const Icon = link.icon;
+              return (
                 <Link
-                  to="/internships"
-                  className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    isActive('/internships')
-                      ? 'text-[#0A66C2] bg-[#F3F6F8]'
-                      : 'text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50'
+                  key={link.href}
+                  to={link.href}
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    isActive(link.href)
+                      ? 'bg-[#0A66C2] text-white'
+                      : 'text-gray-700 hover:bg-gray-100'
                   }`}
                 >
-                  <Briefcase className="h-4 w-4" />
-                  <span>Internships</span>
+                  <Icon className="h-4 w-4" />
+                  <span>{link.label}</span>
                 </Link>
-                
-                <Link
-                  to="/free-courses"
-                  className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    isActive('/free-courses')
-                      ? 'text-[#0A66C2] bg-[#F3F6F8]'
-                      : 'text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50'
-                  }`}
-                >
-                  <GraduationCap className="h-4 w-4" />
-                  <span>Courses</span>
-                </Link>
-                
-                <Link
-                  to="/achievements"
-                  className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    isActive('/achievements')
-                      ? 'text-[#0A66C2] bg-[#F3F6F8]'
-                      : 'text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50'
-                  }`}
-                >
-                  <Award className="h-4 w-4" />
-                  <span>Achievements</span>
-                </Link>
-              </>
-            )}
-            
-            <Link
-              to="/messages"
-              className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive('/messages')
-                  ? 'text-[#0A66C2] bg-[#F3F6F8]'
-                  : 'text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50'
-              }`}
-            >
-              <MessageSquare className="h-4 w-4" />
-              <span>Messages</span>
-            </Link>
-            
-            <Link
-              to="/notifications"
-              className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive('/notifications')
-                  ? 'text-[#0A66C2] bg-[#F3F6F8]'
-                  : 'text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50'
-              }`}
-            >
-              <Bell className="h-4 w-4" />
-              <span>Notifications</span>
-            </Link>
-          </div>
-          
-          {/* User Info & Logout - Desktop */}
-          <div className="hidden md:flex items-center space-x-4">
-            <span className="text-sm text-gray-700 max-w-32 truncate">
-              Welcome, {user.name}
-            </span>
+              );
+            })}
+          </nav>
+
+          {/* Right Side - User Menu */}
+          <div className="flex items-center space-x-2">
+            {/* Notifications */}
             <Button
-              onClick={handleLogout}
-              variant="outline"
-              size="sm"
-              className="flex items-center space-x-1 border-[#0A66C2] text-[#0A66C2] hover:bg-[#0A66C2] hover:text-white"
+              variant="ghost"
+              size="icon"
+              asChild
+              className="relative"
             >
-              <LogOut className="h-4 w-4" />
-              <span className="hidden sm:inline">Logout</span>
+              <Link to="/notifications">
+                <Bell className="h-5 w-5" />
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center p-0">
+                  3
+                </Badge>
+              </Link>
             </Button>
-          </div>
 
-          {/* Mobile menu button */}
-          <div className="lg:hidden">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={toggleMobileMenu}
-              className="border-[#0A66C2] text-[#0A66C2]"
-            >
-              {isMobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-            </Button>
-          </div>
-        </div>
-
-        {/* Mobile Navigation Menu */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden border-t border-gray-200 py-4">
-            <div className="space-y-2">
-              <Link
-                to={user.userType === 'student' ? '/student-dashboard' : '/company-dashboard'}
-                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive('/student-dashboard') || isActive('/company-dashboard')
-                    ? 'text-[#0A66C2] bg-[#F3F6F8]'
-                    : 'text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50'
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <Home className="h-4 w-4" />
-                <span>Home</span>
-              </Link>
-              
-              <Link
-                to="/profile"
-                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive('/profile')
-                    ? 'text-[#0A66C2] bg-[#F3F6F8]'
-                    : 'text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50'
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <User className="h-4 w-4" />
-                <span>Profile</span>
-              </Link>
-              
-              {user.userType === 'student' && (
-                <>
-                  <Link
-                    to="/internships"
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                      isActive('/internships')
-                        ? 'text-[#0A66C2] bg-[#F3F6F8]'
-                        : 'text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50'
-                    }`}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <Briefcase className="h-4 w-4" />
-                    <span>Internships</span>
-                  </Link>
-                  
-                  <Link
-                    to="/free-courses"
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                      isActive('/free-courses')
-                        ? 'text-[#0A66C2] bg-[#F3F6F8]'
-                        : 'text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50'
-                    }`}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <GraduationCap className="h-4 w-4" />
-                    <span>Free Courses</span>
-                  </Link>
-                  
-                  <Link
-                    to="/achievements"
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                      isActive('/achievements')
-                        ? 'text-[#0A66C2] bg-[#F3F6F8]'
-                        : 'text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50'
-                    }`}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <Award className="h-4 w-4" />
-                    <span>Achievements</span>
-                  </Link>
-                </>
-              )}
-              
-              <Link
-                to="/messages"
-                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive('/messages')
-                    ? 'text-[#0A66C2] bg-[#F3F6F8]'
-                    : 'text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50'
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <MessageSquare className="h-4 w-4" />
-                <span>Messages</span>
-              </Link>
-              
-              <Link
-                to="/notifications"
-                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive('/notifications')
-                    ? 'text-[#0A66C2] bg-[#F3F6F8]'
-                    : 'text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50'
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <Bell className="h-4 w-4" />
-                <span>Notifications</span>
-              </Link>
-
-              {/* Mobile User Info & Logout */}
-              <div className="border-t border-gray-200 pt-4 mt-4">
+            {/* User Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="flex items-center space-x-2 px-3 py-2 rounded-lg">
+                  <div className="w-8 h-8 bg-[#0A66C2] rounded-full flex items-center justify-center">
+                    <User className="h-4 w-4 text-white" />
+                  </div>
+                  <div className="hidden sm:block text-left">
+                    <p className="text-sm font-medium text-[#333333] truncate max-w-32">
+                      {user?.name || 'User'}
+                    </p>
+                    <p className="text-xs text-gray-500 capitalize">
+                      {user?.userType || 'Student'}
+                    </p>
+                  </div>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56 bg-white rounded-lg shadow-lg border" align="end">
                 <div className="px-3 py-2">
-                  <span className="text-sm text-gray-700">Welcome, {user.name}</span>
+                  <p className="text-sm font-medium text-[#333333]">{user?.name}</p>
+                  <p className="text-xs text-gray-500">{user?.email}</p>
                 </div>
-                <Button
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/profile" className="flex items-center space-x-2 px-3 py-2 text-sm cursor-pointer">
+                    <User className="h-4 w-4" />
+                    <span>View Profile</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/notifications" className="flex items-center space-x-2 px-3 py-2 text-sm cursor-pointer">
+                    <Bell className="h-4 w-4" />
+                    <span>Notifications</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem 
                   onClick={handleLogout}
-                  variant="outline"
-                  size="sm"
-                  className="mx-3 flex items-center space-x-2 border-[#0A66C2] text-[#0A66C2] hover:bg-[#0A66C2] hover:text-white"
+                  className="flex items-center space-x-2 px-3 py-2 text-sm text-red-600 cursor-pointer"
                 >
                   <LogOut className="h-4 w-4" />
                   <span>Logout</span>
-                </Button>
-              </div>
-            </div>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
-        )}
+        </div>
       </div>
-    </nav>
+    </header>
   );
 };
 

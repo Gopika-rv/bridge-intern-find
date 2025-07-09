@@ -51,6 +51,10 @@ const Register = () => {
     return phoneRegex.test(phone);
   };
 
+  const validateEmail = (email: string) => {
+    return email.endsWith('@gmail.com') && email.length > 10;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -58,11 +62,24 @@ const Register = () => {
     const errors: string[] = [];
     
     if (!validatePhone(formData.phone)) {
-      errors.push('Phone number must be a valid 10-digit Indian number starting with 6, 7, 8, or 9');
+      errors.push('Please enter a valid Indian mobile number (must start with 6, 7, 8, or 9 and be exactly 10 digits)');
+    }
+    
+    if (!validateEmail(formData.email)) {
+      errors.push('Email must be a valid Gmail address (@gmail.com)');
     }
     
     if (formData.password !== formData.confirmPassword) {
       errors.push('Passwords do not match');
+    }
+
+    if (userType === 'student') {
+      if (!formData.university.trim()) {
+        errors.push('University name is required');
+      }
+      if (!formData.degree.trim()) {
+        errors.push('Degree is required');
+      }
     }
 
     if (errors.length > 0) {
@@ -78,7 +95,7 @@ const Register = () => {
         toast({
           title: "🎉 Welcome to InternConnect!",
           description: `Your ${userType} account has been created successfully. Start exploring opportunities now!`,
-          className: "bg-green-50 border-green-200",
+          className: "bg-green-50 border-green-200 rounded-lg",
         });
         navigate(userType === 'student' ? '/student-dashboard' : '/company-dashboard');
       }
@@ -95,18 +112,18 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-linkedin-lightgray flex items-center justify-center px-4 py-8">
+    <div className="min-h-screen bg-[#F3F6F8] flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link to="/" className="text-3xl font-bold text-linkedin-blue">
+          <Link to="/" className="text-3xl font-bold text-[#0A66C2]">
             InternConnect
           </Link>
           <p className="text-gray-600 mt-2">Create your account</p>
         </div>
 
-        <Card className="shadow-lg border-0">
+        <Card className="shadow-lg border-0 rounded-lg">
           <CardHeader className="text-center">
-            <CardTitle className="text-linkedin-blue">Get Started</CardTitle>
+            <CardTitle className="text-[#0A66C2]">Get Started</CardTitle>
             <CardDescription>Join our community of students and companies</CardDescription>
           </CardHeader>
           <CardContent>
@@ -131,9 +148,9 @@ const Register = () => {
             )}
 
             <Tabs value={userType} onValueChange={(value) => setUserType(value as 'student' | 'company')}>
-              <TabsList className="grid w-full grid-cols-2 bg-gray-100">
-                <TabsTrigger value="student" className="data-[state=active]:bg-linkedin-blue data-[state=active]:text-white">Student</TabsTrigger>
-                <TabsTrigger value="company" className="data-[state=active]:bg-linkedin-blue data-[state=active]:text-white">Company</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-2 bg-gray-100 rounded-lg">
+                <TabsTrigger value="student" className="data-[state=active]:bg-[#0A66C2] data-[state=active]:text-white rounded-lg">Student</TabsTrigger>
+                <TabsTrigger value="company" className="data-[state=active]:bg-[#0A66C2] data-[state=active]:text-white rounded-lg">Company</TabsTrigger>
               </TabsList>
               
               <TabsContent value="student" className="mt-6">
@@ -145,7 +162,7 @@ const Register = () => {
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
+                      className="border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2] rounded-lg"
                       required
                     />
                   </div>
@@ -159,7 +176,7 @@ const Register = () => {
                       value={formData.email}
                       onChange={handleInputChange}
                       placeholder="yourname@gmail.com"
-                      className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
+                      className="border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2] rounded-lg"
                       required
                     />
                   </div>
@@ -171,11 +188,11 @@ const Register = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      placeholder="Enter valid 10-digit number (e.g., 9876543210)"
-                      className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
+                      placeholder="9876543210"
+                      className="border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2] rounded-lg"
                       required
                     />
-                    <p className="text-xs text-gray-500">Must start with 6, 7, 8, or 9</p>
+                    <p className="text-xs text-gray-500">Must start with 6, 7, 8, or 9 and be exactly 10 digits</p>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4">
@@ -187,7 +204,7 @@ const Register = () => {
                         type="password"
                         value={formData.password}
                         onChange={handleInputChange}
-                        className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
+                        className="border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2] rounded-lg"
                         required
                       />
                     </div>
@@ -199,7 +216,7 @@ const Register = () => {
                         type="password"
                         value={formData.confirmPassword}
                         onChange={handleInputChange}
-                        className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
+                        className="border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2] rounded-lg"
                         required
                       />
                     </div>
@@ -213,7 +230,7 @@ const Register = () => {
                         name="city"
                         value={formData.city}
                         onChange={handleInputChange}
-                        className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
+                        className="border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2] rounded-lg"
                         required
                       />
                     </div>
@@ -224,7 +241,7 @@ const Register = () => {
                         name="state"
                         value={formData.state}
                         onChange={handleInputChange}
-                        className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
+                        className="border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2] rounded-lg"
                         required
                       />
                     </div>
@@ -235,34 +252,34 @@ const Register = () => {
                         name="country"
                         value={formData.country}
                         onChange={handleInputChange}
-                        className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
+                        className="border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2] rounded-lg"
                         required
                       />
                     </div>
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="university">University *</Label>
+                    <Label htmlFor="university">University Name *</Label>
                     <Input
                       id="university"
                       name="university"
                       value={formData.university}
                       onChange={handleInputChange}
                       placeholder="e.g., Harvard University"
-                      className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
+                      className="border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2] rounded-lg"
                       required
                     />
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="degree">Degree *</Label>
+                    <Label htmlFor="degree">Degree Program *</Label>
                     <Input
                       id="degree"
                       name="degree"
                       value={formData.degree}
                       onChange={handleInputChange}
                       placeholder="e.g., Bachelor of Computer Science"
-                      className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
+                      className="border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2] rounded-lg"
                       required
                     />
                   </div>
@@ -275,7 +292,7 @@ const Register = () => {
                       value={formData.skills}
                       onChange={handleInputChange}
                       placeholder="List your technical and soft skills"
-                      className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
+                      className="border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2] rounded-lg"
                       required
                     />
                   </div>
@@ -288,11 +305,11 @@ const Register = () => {
                       value={formData.portfolio}
                       onChange={handleInputChange}
                       placeholder="https://your-portfolio.com"
-                      className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
+                      className="border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2] rounded-lg"
                     />
                   </div>
                   
-                  <Button type="submit" className="w-full bg-linkedin-blue hover:bg-linkedin-darkblue" disabled={isLoading}>
+                  <Button type="submit" className="w-full bg-[#0A66C2] hover:bg-[#004182] rounded-lg" disabled={isLoading}>
                     {isLoading ? 'Creating Account...' : 'Create Student Account'}
                   </Button>
                 </form>
@@ -307,7 +324,7 @@ const Register = () => {
                       name="companyName"
                       value={formData.companyName}
                       onChange={handleInputChange}
-                      className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
+                      className="border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2] rounded-lg"
                       required
                     />
                   </div>
@@ -321,7 +338,7 @@ const Register = () => {
                       value={formData.email}
                       onChange={handleInputChange}
                       placeholder="company@gmail.com"
-                      className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
+                      className="border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2] rounded-lg"
                       required
                     />
                   </div>
@@ -333,11 +350,11 @@ const Register = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      placeholder="Enter valid 10-digit number (e.g., 9876543210)"
-                      className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
+                      placeholder="9876543210"
+                      className="border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2] rounded-lg"
                       required
                     />
-                    <p className="text-xs text-gray-500">Must start with 6, 7, 8, or 9</p>
+                    <p className="text-xs text-gray-500">Must start with 6, 7, 8, or 9 and be exactly 10 digits</p>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4">
@@ -350,7 +367,7 @@ const Register = () => {
                         value={formData.password}
                         onChange={handleInputChange}
                         placeholder="Min 8 chars, A-z, 0-9, !@#"
-                        className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
+                        className="border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2] rounded-lg"
                         required
                       />
                     </div>
@@ -362,7 +379,7 @@ const Register = () => {
                         type="password"
                         value={formData.confirmPassword}
                         onChange={handleInputChange}
-                        className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
+                        className="border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2] rounded-lg"
                         required
                       />
                     </div>
@@ -376,7 +393,7 @@ const Register = () => {
                         name="city"
                         value={formData.city}
                         onChange={handleInputChange}
-                        className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
+                        className="border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2] rounded-lg"
                         required
                       />
                     </div>
@@ -387,7 +404,7 @@ const Register = () => {
                         name="state"
                         value={formData.state}
                         onChange={handleInputChange}
-                        className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
+                        className="border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2] rounded-lg"
                         required
                       />
                     </div>
@@ -398,7 +415,7 @@ const Register = () => {
                         name="country"
                         value={formData.country}
                         onChange={handleInputChange}
-                        className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
+                        className="border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2] rounded-lg"
                         required
                       />
                     </div>
@@ -412,7 +429,7 @@ const Register = () => {
                       value={formData.website}
                       onChange={handleInputChange}
                       placeholder="https://company.com"
-                      className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
+                      className="border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2] rounded-lg"
                     />
                   </div>
                   
@@ -424,12 +441,12 @@ const Register = () => {
                       value={formData.description}
                       onChange={handleInputChange}
                       placeholder="Brief description of your company"
-                      className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
+                      className="border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2] rounded-lg"
                       required
                     />
                   </div>
                   
-                  <Button type="submit" className="w-full bg-linkedin-blue hover:bg-linkedin-darkblue" disabled={isLoading}>
+                  <Button type="submit" className="w-full bg-[#0A66C2] hover:bg-[#004182] rounded-lg" disabled={isLoading}>
                     {isLoading ? 'Creating Account...' : 'Create Company Account'}
                   </Button>
                 </form>
@@ -439,7 +456,7 @@ const Register = () => {
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
                 Already have an account?{' '}
-                <Link to="/login" className="text-linkedin-blue hover:underline font-medium">
+                <Link to="/login" className="text-[#0A66C2] hover:underline font-medium">
                   Sign in here
                 </Link>
               </p>

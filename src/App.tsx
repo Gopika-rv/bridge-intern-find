@@ -19,6 +19,8 @@ import MyCertificates from "./pages/MyCertificates";
 import Messages from "./pages/Messages";
 import Notifications from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
+import ViewProfile from "./pages/ViewProfile";
+import Achievements from "./pages/Achievements";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
