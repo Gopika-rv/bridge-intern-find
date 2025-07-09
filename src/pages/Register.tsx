@@ -21,7 +21,8 @@ const Register = () => {
     state: '',
     country: 'India',
     // Student specific
-    education: '',
+    university: '',
+    degree: '',
     skills: '',
     portfolio: '',
     // Company specific
@@ -45,12 +46,27 @@ const Register = () => {
     setValidationErrors([]);
   };
 
+  const validatePhone = (phone: string) => {
+    const phoneRegex = /^[6-9]\d{9}$/;
+    return phoneRegex.test(phone);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate passwords match
+    // Custom validation
+    const errors: string[] = [];
+    
+    if (!validatePhone(formData.phone)) {
+      errors.push('Phone number must be a valid 10-digit Indian number starting with 6, 7, 8, or 9');
+    }
+    
     if (formData.password !== formData.confirmPassword) {
-      setValidationErrors(['Passwords do not match']);
+      errors.push('Passwords do not match');
+    }
+
+    if (errors.length > 0) {
+      setValidationErrors(errors);
       return;
     }
 
@@ -60,8 +76,8 @@ const Register = () => {
       const success = await register(formData, userType);
       if (success) {
         toast({
-          title: "Account created successfully!",
-          description: "Welcome to InternConnect.",
+          title: "🎉 Welcome to InternConnect!",
+          description: `Your ${userType} account has been created successfully. Start exploring opportunities now!`,
           className: "bg-green-50 border-green-200",
         });
         navigate(userType === 'student' ? '/student-dashboard' : '/company-dashboard');
@@ -95,10 +111,22 @@ const Register = () => {
           </CardHeader>
           <CardContent>
             {validationErrors.length > 0 && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
-                {validationErrors.map((error, index) => (
-                  <p key={index} className="text-sm text-red-600">{error}</p>
-                ))}
+              <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <span className="text-red-500">⚠️</span>
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-red-800">Please fix these errors:</h3>
+                    <div className="mt-2 text-sm text-red-700">
+                      <ul className="list-disc pl-5 space-y-1">
+                        {validationErrors.map((error, index) => (
+                          <li key={index}>{error}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 
@@ -137,16 +165,17 @@ const Register = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number (Indian) *</Label>
+                    <Label htmlFor="phone">Phone Number *</Label>
                     <Input
                       id="phone"
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      placeholder="9876543210"
+                      placeholder="Enter valid 10-digit number (e.g., 9876543210)"
                       className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
                       required
                     />
+                    <p className="text-xs text-gray-500">Must start with 6, 7, 8, or 9</p>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4">
@@ -213,13 +242,26 @@ const Register = () => {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="education">Education *</Label>
+                    <Label htmlFor="university">University *</Label>
                     <Input
-                      id="education"
-                      name="education"
-                      value={formData.education}
+                      id="university"
+                      name="university"
+                      value={formData.university}
                       onChange={handleInputChange}
-                      placeholder="University, Degree"
+                      placeholder="e.g., Harvard University"
+                      className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="degree">Degree *</Label>
+                    <Input
+                      id="degree"
+                      name="degree"
+                      value={formData.degree}
+                      onChange={handleInputChange}
+                      placeholder="e.g., Bachelor of Computer Science"
                       className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
                       required
                     />
@@ -285,16 +327,17 @@ const Register = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number (Indian) *</Label>
+                    <Label htmlFor="phone">Phone Number *</Label>
                     <Input
                       id="phone"
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      placeholder="9876543210"
+                      placeholder="Enter valid 10-digit number (e.g., 9876543210)"
                       className="border-gray-300 focus:border-linkedin-blue focus:ring-linkedin-blue"
                       required
                     />
+                    <p className="text-xs text-gray-500">Must start with 6, 7, 8, or 9</p>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4">

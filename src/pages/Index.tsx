@@ -1,10 +1,32 @@
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, Building, Search, MessageSquare } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleSmartMatching = () => {
+    toast({
+      title: "Smart Matching Available!",
+      description: "Sign up as a student to access our AI-powered internship matching system.",
+      className: "bg-green-50 border-green-200",
+    });
+    navigate('/register');
+  };
+
+  const handleDirectCommunication = () => {
+    toast({
+      title: "Direct Messaging Ready!",
+      description: "Join InternConnect to start communicating directly with recruiters.",
+      className: "bg-blue-50 border-blue-200",
+    });
+    navigate('/register');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
       <header className="bg-white shadow-sm">
@@ -43,7 +65,7 @@ const Index = () => {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-          <Card className="text-center hover:shadow-lg transition-shadow">
+          <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/register')}>
             <CardHeader>
               <Users className="h-12 w-12 text-blue-600 mx-auto mb-4" />
               <CardTitle>For Students</CardTitle>
@@ -55,7 +77,7 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          <Card className="text-center hover:shadow-lg transition-shadow">
+          <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/register')}>
             <CardHeader>
               <Building className="h-12 w-12 text-blue-600 mx-auto mb-4" />
               <CardTitle>For Companies</CardTitle>
@@ -67,19 +89,19 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          <Card className="text-center hover:shadow-lg transition-shadow">
+          <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={handleSmartMatching}>
             <CardHeader>
               <Search className="h-12 w-12 text-blue-600 mx-auto mb-4" />
               <CardTitle>Smart Matching</CardTitle>
             </CardHeader>
             <CardContent>
               <CardDescription>
-                Advanced filters help students find relevant opportunities and companies find ideal candidates.
+                Advanced AI helps students find relevant opportunities and companies find ideal candidates.
               </CardDescription>
             </CardContent>
           </Card>
 
-          <Card className="text-center hover:shadow-lg transition-shadow">
+          <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={handleDirectCommunication}>
             <CardHeader>
               <MessageSquare className="h-12 w-12 text-blue-600 mx-auto mb-4" />
               <CardTitle>Direct Communication</CardTitle>

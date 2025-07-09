@@ -49,6 +49,11 @@ const App = () => (
                 <Profile />
               </ProtectedRoute>
             } />
+            <Route path="/view-profile" element={
+              <ProtectedRoute userType="company">
+                <ViewProfile />
+              </ProtectedRoute>
+            } />
             <Route path="/internships" element={
               <ProtectedRoute>
                 <Internships />
@@ -67,6 +72,11 @@ const App = () => (
             <Route path="/free-courses" element={
               <ProtectedRoute userType="student">
                 <FreeCourses />
+              </ProtectedRoute>
+            } />
+            <Route path="/achievements" element={
+              <ProtectedRoute userType="student">
+                <Achievements />
               </ProtectedRoute>
             } />
             <Route path="/my-certificates" element={
