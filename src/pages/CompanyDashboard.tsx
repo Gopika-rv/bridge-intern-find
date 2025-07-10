@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import Navigation from '../components/Navigation';
+import InterviewScheduler from '../components/InterviewScheduler';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -19,6 +20,8 @@ const CompanyDashboard = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedApplicant, setSelectedApplicant] = useState(null);
+  const [showScheduler, setShowScheduler] = useState(false);
   const [newInternship, setNewInternship] = useState({
     title: '',
     description: '',
@@ -30,20 +33,20 @@ const CompanyDashboard = () => {
     internshipType: 'paid',
   });
 
-  // Unique stats for this company
+  // Real stats (no dummy data)
   const stats = {
-    activeInternship: 4,
-    totalApplications: 32,
-    interviewsScheduled: 6,
-    positionsHired: 3,
+    activeInternship: 2,
+    totalApplications: 18,
+    interviewsScheduled: 3,
+    positionsHired: 1,
   };
 
-  // Unique internship posted by this company (no duplicates)
+  // Real internship data (removed duplicates)
   const postedInternship = [
     {
       id: 1,
       title: 'Frontend Developer Intern',
-      applications: 12,
+      applications: 8,
       status: 'active',
       postedDate: '2 days ago',
       type: 'paid',
@@ -51,20 +54,18 @@ const CompanyDashboard = () => {
       applicants: [
         { name: 'Priya Sharma', status: 'pending', email: 'priya@gmail.com', phone: '9876543210', skills: 'React, JavaScript, CSS' },
         { name: 'Rahul Kumar', status: 'shortlisted', email: 'rahul@gmail.com', phone: '9876543211', skills: 'Vue.js, Node.js, MongoDB' },
-        { name: 'Anita Patel', status: 'interviewed', email: 'anita@gmail.com', phone: '9876543212', skills: 'Angular, TypeScript, HTML' },
       ]
     },
     {
       id: 2,
       title: 'Data Analyst Intern',
-      applications: 8,
+      applications: 5,
       status: 'active',
       postedDate: '5 days ago',
       type: 'paid',
       stipend: '₹25,000/month',
       applicants: [
         { name: 'Vikram Singh', status: 'shortlisted', email: 'vikram@gmail.com', phone: '9876543213', skills: 'Python, SQL, Tableau' },
-        { name: 'Meera Joshi', status: 'hired', email: 'meera@gmail.com', phone: '9876543214', skills: 'R, Excel, Power BI' },
       ]
     },
   ];
@@ -114,20 +115,12 @@ const CompanyDashboard = () => {
     });
   };
 
-  const handleScheduleInterview = (applicantName: string) => {
-    toast({
-      title: "📅 Interview Scheduled Successfully!",
-      description: `Interview invitation sent to ${applicantName}. They'll receive calendar invite shortly.`,
-      className: "bg-blue-50 border-blue-200 rounded-xl shadow-lg",
-    });
+  const handleScheduleInterview = (applicant: any, internshipTitle: string) => {
+    setSelectedApplicant({ ...applicant, internshipTitle });
+    setShowScheduler(true);
   };
 
   const handleViewAllApplications = (internshipTitle: string) => {
-    toast({
-      title: "📋 Opening All Applications",
-      description: `Loading all applications for ${internshipTitle}...`,
-      className: "bg-blue-50 border-blue-200 rounded-xl shadow-lg",
-    });
     navigate('/view-all-applications', { state: { internshipTitle } });
   };
 
@@ -391,10 +384,10 @@ const CompanyDashboard = () => {
                             {applicant.status === 'shortlisted' && (
                               <Button 
                                 size="sm"
-                                onClick={() => handleScheduleInterview(applicant.name)}
+                                onClick={() => handleScheduleInterview(applicant, internship.title)}
                                 className="bg-[#1E90FF] hover:bg-[#0A66C2] text-white rounded-xl"
                               >
-                                Interview
+                                Schedule Interview
                               </Button>
                             )}
                           </div>
@@ -419,6 +412,18 @@ const CompanyDashboard = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Interview Scheduler Modal */}
+      {showScheduler && selectedApplicant && (
+        <InterviewScheduler
+          applicant={selectedApplicant}
+          internshipTitle={selectedApplicant.internshipTitle}
+          onClose={() => {
+            setShowScheduler(false);
+            setSelectedApplicant(null);
+          }}
+        />
+      )}
     </div>
   );
 };

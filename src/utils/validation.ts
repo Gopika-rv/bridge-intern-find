@@ -8,6 +8,11 @@ export const validateGmail = (email: string): boolean => {
   return emailRegex.test(email) && email.length > 10;
 };
 
+export const validateCompanyEmail = (email: string): boolean => {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email) && email.length > 5;
+};
+
 export const validateIndianPhone = (phone: string): boolean => {
   const phoneRegex = /^[6-9]\d{9}$/;
   return phoneRegex.test(phone.replace(/\D/g, ''));
@@ -53,8 +58,14 @@ export const getValidationErrors = (formData: any, isCompany: boolean = false) =
     errors.push(isCompany ? 'Company name must be at least 2 characters' : 'Name must be at least 2 characters');
   }
   
-  if (!validateGmail(formData.email || '')) {
-    errors.push('Email must be a valid @gmail.com address');
+  if (isCompany) {
+    if (!validateCompanyEmail(formData.email || '')) {
+      errors.push('Email must be a valid company email address');
+    }
+  } else {
+    if (!validateGmail(formData.email || '')) {
+      errors.push('Email must be a valid @gmail.com address');
+    }
   }
   
   if (!validateIndianPhone(formData.phone || '')) {
