@@ -1,15 +1,16 @@
 
 export const validateName = (name: string): boolean => {
-  return name.trim().length > 0;
+  return name.trim().length >= 2;
 };
 
 export const validateGmail = (email: string): boolean => {
-  return email.endsWith('@gmail.com') && email.length > 10;
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+  return emailRegex.test(email) && email.length > 10;
 };
 
 export const validateIndianPhone = (phone: string): boolean => {
   const phoneRegex = /^[6-9]\d{9}$/;
-  return phoneRegex.test(phone);
+  return phoneRegex.test(phone.replace(/\D/g, ''));
 };
 
 export const validatePassword = (password: string, isCompany: boolean = false): boolean => {
@@ -29,11 +30,27 @@ export const validateStrongPassword = (password: string): boolean => {
   return password.length >= minLength && hasUppercase && hasLowercase && hasNumber && hasSpecialChar;
 };
 
+export const validateUniversity = (university: string): boolean => {
+  return university.trim().length >= 3;
+};
+
+export const validateDegree = (degree: string): boolean => {
+  return degree.trim().length >= 3;
+};
+
+export const validateLocation = (location: string): boolean => {
+  return location.trim().length >= 2;
+};
+
+export const validateDescription = (description: string): boolean => {
+  return description.trim().length >= 10;
+};
+
 export const getValidationErrors = (formData: any, isCompany: boolean = false) => {
   const errors: string[] = [];
   
   if (!validateName(formData.name || formData.companyName || '')) {
-    errors.push(isCompany ? 'Company name cannot be blank' : 'Name cannot be blank');
+    errors.push(isCompany ? 'Company name must be at least 2 characters' : 'Name must be at least 2 characters');
   }
   
   if (!validateGmail(formData.email || '')) {
@@ -51,6 +68,26 @@ export const getValidationErrors = (formData: any, isCompany: boolean = false) =
       errors.push('Password must be at least 6 characters');
     }
   }
+
+  if (!isCompany) {
+    if (!validateUniversity(formData.university || '')) {
+      errors.push('University name must be at least 3 characters');
+    }
+    
+    if (!validateDegree(formData.degree || '')) {
+      errors.push('Degree must be at least 3 characters');
+    }
+  }
   
   return errors;
+};
+
+export const formatPhoneNumber = (phone: string): string => {
+  const cleaned = phone.replace(/\D/g, '');
+  return cleaned.slice(0, 10);
+};
+
+export const isValidPhoneInput = (phone: string): boolean => {
+  const cleaned = phone.replace(/\D/g, '');
+  return cleaned.length <= 10 && (cleaned.length === 0 || /^[6-9]/.test(cleaned));
 };
