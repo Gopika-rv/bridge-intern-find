@@ -32,14 +32,14 @@ const CompanyDashboard = () => {
 
   // Unique stats for this company
   const stats = {
-    activeInternships: 4,
+    activeInternship: 4,
     totalApplications: 32,
     interviewsScheduled: 6,
     positionsHired: 3,
   };
 
-  // Unique internships posted by this company
-  const postedInternships = [
+  // Unique internship posted by this company (no duplicates)
+  const postedInternship = [
     {
       id: 1,
       title: 'Frontend Developer Intern',
@@ -82,7 +82,7 @@ const CompanyDashboard = () => {
     toast({
       title: "🎉 Internship Posted Successfully!",
       description: `Your ${newInternship.internshipType} internship "${newInternship.title}" is now live and accepting applications.`,
-      className: "bg-green-50 border-green-200 rounded-lg",
+      className: "bg-green-50 border-green-200 rounded-xl shadow-lg",
     });
     setIsDialogOpen(false);
     setNewInternship({
@@ -99,35 +99,36 @@ const CompanyDashboard = () => {
 
   const handleViewProfile = (applicant: any) => {
     toast({
-      title: "👤 Student Profile",
-      description: `${applicant.name} - ${applicant.email} - Skills: ${applicant.skills}`,
-      className: "bg-blue-50 border-blue-200 rounded-lg",
+      title: "👤 Opening Student Profile",
+      description: `Loading ${applicant.name}'s complete profile...`,
+      className: "bg-blue-50 border-blue-200 rounded-xl shadow-lg",
     });
     navigate('/view-profile', { state: { applicant } });
   };
 
   const handleShortlist = (applicantName: string) => {
     toast({
-      title: "✅ Applicant Shortlisted!",
+      title: "✅ Applicant Shortlisted Successfully!",
       description: `${applicantName} has been shortlisted and will be notified via email.`,
-      className: "bg-green-50 border-green-200 rounded-lg",
+      className: "bg-green-50 border-green-200 rounded-xl shadow-lg",
     });
   };
 
   const handleScheduleInterview = (applicantName: string) => {
     toast({
-      title: "📅 Interview Scheduled!",
+      title: "📅 Interview Scheduled Successfully!",
       description: `Interview invitation sent to ${applicantName}. They'll receive calendar invite shortly.`,
-      className: "bg-blue-50 border-blue-200 rounded-lg",
+      className: "bg-blue-50 border-blue-200 rounded-xl shadow-lg",
     });
   };
 
   const handleViewAllApplications = (internshipTitle: string) => {
     toast({
-      title: "📋 All Applications",
-      description: `Viewing all applications for ${internshipTitle}. Detailed list opened.`,
-      className: "bg-blue-50 border-blue-200 rounded-lg",
+      title: "📋 Opening All Applications",
+      description: `Loading all applications for ${internshipTitle}...`,
+      className: "bg-blue-50 border-blue-200 rounded-xl shadow-lg",
     });
+    navigate('/view-all-applications', { state: { internshipTitle } });
   };
 
   const getStatusBadge = (status: string) => {
@@ -153,45 +154,45 @@ const CompanyDashboard = () => {
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4">
           <div>
             <h1 className="text-3xl font-bold text-[#333333]">Company Dashboard</h1>
-            <p className="text-gray-600 mt-2">Manage your internships and review applications</p>
+            <p className="text-gray-600 mt-2">Manage your internship and review applications</p>
           </div>
           
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="flex items-center space-x-2 bg-[#0A66C2] hover:bg-[#004182] rounded-lg px-6 py-3">
+              <Button className="flex items-center space-x-2 bg-green-600 hover:bg-green-700 rounded-xl px-6 py-3 text-white">
                 <Plus className="h-4 w-4" />
                 <span>Post Internship</span>
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto rounded-lg">
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl bg-gradient-to-br from-green-50 to-amber-50">
               <DialogHeader>
-                <DialogTitle className="text-[#333333]">Post New Internship</DialogTitle>
-                <DialogDescription>Create a new internship posting to attract top talent.</DialogDescription>
+                <DialogTitle className="text-green-800 text-xl">Post New Internship</DialogTitle>
+                <DialogDescription className="text-amber-700">Create a new internship posting to attract top talent.</DialogDescription>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-6">
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="title" className="text-[#333333]">Job Title *</Label>
+                    <Label htmlFor="title" className="text-green-800 font-medium">Job Title *</Label>
                     <Input
                       id="title"
                       name="title"
                       value={newInternship.title}
                       onChange={handleInputChange}
                       placeholder="e.g., Frontend Developer Intern"
-                      className="rounded-lg border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2]"
+                      className="rounded-xl border-green-300 focus:border-green-500 focus:ring-green-500 bg-white"
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="location" className="text-[#333333]">Location *</Label>
+                    <Label htmlFor="location" className="text-green-800 font-medium">Location *</Label>
                     <Input
                       id="location"
                       name="location"
                       value={newInternship.location}
                       onChange={handleInputChange}
                       placeholder="e.g., Remote, Mumbai, India"
-                      className="rounded-lg border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2]"
+                      className="rounded-xl border-green-300 focus:border-green-500 focus:ring-green-500 bg-white"
                       required
                     />
                   </div>
@@ -199,21 +200,21 @@ const CompanyDashboard = () => {
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="duration" className="text-[#333333]">Duration *</Label>
+                    <Label htmlFor="duration" className="text-green-800 font-medium">Duration *</Label>
                     <Input
                       id="duration"
                       name="duration"
                       value={newInternship.duration}
                       onChange={handleInputChange}
                       placeholder="e.g., 3 months"
-                      className="rounded-lg border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2]"
+                      className="rounded-xl border-green-300 focus:border-green-500 focus:ring-green-500 bg-white"
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="type" className="text-[#333333]">Work Type *</Label>
+                    <Label htmlFor="type" className="text-green-800 font-medium">Work Type *</Label>
                     <Select value={newInternship.type} onValueChange={(value) => setNewInternship({...newInternship, type: value})}>
-                      <SelectTrigger className="rounded-lg">
+                      <SelectTrigger className="rounded-xl border-green-300 bg-white">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -223,9 +224,9 @@ const CompanyDashboard = () => {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="internshipType" className="text-[#333333]">Compensation Type *</Label>
+                    <Label htmlFor="internshipType" className="text-green-800 font-medium">Compensation Type *</Label>
                     <Select value={newInternship.internshipType} onValueChange={(value) => setNewInternship({...newInternship, internshipType: value})}>
-                      <SelectTrigger className="rounded-lg">
+                      <SelectTrigger className="rounded-xl border-green-300 bg-white">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -237,20 +238,20 @@ const CompanyDashboard = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="stipend" className="text-[#333333]">Stipend/Compensation *</Label>
+                  <Label htmlFor="stipend" className="text-green-800 font-medium">Stipend/Compensation *</Label>
                   <Input
                     id="stipend"
                     name="stipend"
                     value={newInternship.stipend}
                     onChange={handleInputChange}
                     placeholder="e.g., ₹25,000/month or Certificate of Completion"
-                    className="rounded-lg border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2]"
+                    className="rounded-xl border-green-300 focus:border-green-500 focus:ring-green-500 bg-white"
                     required
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="description" className="text-[#333333]">Job Description *</Label>
+                  <Label htmlFor="description" className="text-green-800 font-medium">Job Description *</Label>
                   <Textarea
                     id="description"
                     name="description"
@@ -258,13 +259,13 @@ const CompanyDashboard = () => {
                     onChange={handleInputChange}
                     placeholder="Describe the role, responsibilities, and what the intern will learn..."
                     rows={4}
-                    className="rounded-lg border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2]"
+                    className="rounded-xl border-green-300 focus:border-green-500 focus:ring-green-500 bg-white"
                     required
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="requirements" className="text-[#333333]">Requirements *</Label>
+                  <Label htmlFor="requirements" className="text-green-800 font-medium">Requirements *</Label>
                   <Textarea
                     id="requirements"
                     name="requirements"
@@ -272,16 +273,16 @@ const CompanyDashboard = () => {
                     onChange={handleInputChange}
                     placeholder="List the required skills, education, and qualifications..."
                     rows={3}
-                    className="rounded-lg border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2]"
+                    className="rounded-xl border-green-300 focus:border-green-500 focus:ring-green-500 bg-white"
                     required
                   />
                 </div>
                 
                 <div className="flex justify-end space-x-4 pt-4">
-                  <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)} className="rounded-lg">
+                  <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)} className="rounded-xl border-amber-400 text-amber-700 hover:bg-amber-50">
                     Cancel
                   </Button>
-                  <Button type="submit" className="bg-[#0A66C2] hover:bg-[#004182] rounded-lg">Post Internship</Button>
+                  <Button type="submit" className="bg-green-600 hover:bg-green-700 rounded-xl text-white">Post Internship</Button>
                 </div>
               </form>
             </DialogContent>
@@ -290,18 +291,18 @@ const CompanyDashboard = () => {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="rounded-lg border-0 shadow-md">
+          <Card className="rounded-xl border-0 shadow-md">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-[#333333]">Active Internships</CardTitle>
+              <CardTitle className="text-sm font-medium text-[#333333]">Active Internship</CardTitle>
               <Briefcase className="h-4 w-4 text-[#0A66C2]" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-[#0A66C2]">{stats.activeInternships}</div>
+              <div className="text-2xl font-bold text-[#0A66C2]">{stats.activeInternship}</div>
               <p className="text-xs text-muted-foreground">Currently posted</p>
             </CardContent>
           </Card>
 
-          <Card className="rounded-lg border-0 shadow-md">
+          <Card className="rounded-xl border-0 shadow-md">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-[#333333]">Total Applications</CardTitle>
               <Users className="h-4 w-4 text-[#0A66C2]" />
@@ -312,7 +313,7 @@ const CompanyDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="rounded-lg border-0 shadow-md">
+          <Card className="rounded-xl border-0 shadow-md">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-[#333333]">Interviews Scheduled</CardTitle>
               <MessageSquare className="h-4 w-4 text-[#0A66C2]" />
@@ -323,7 +324,7 @@ const CompanyDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="rounded-lg border-0 shadow-md">
+          <Card className="rounded-xl border-0 shadow-md">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-[#333333]">Positions Filled</CardTitle>
               <Eye className="h-4 w-4 text-[#0A66C2]" />
@@ -335,16 +336,16 @@ const CompanyDashboard = () => {
           </Card>
         </div>
 
-        {/* Posted Internships */}
-        <Card className="rounded-lg border-0 shadow-md">
+        {/* Posted Internship */}
+        <Card className="rounded-xl border-0 shadow-md">
           <CardHeader>
-            <CardTitle className="text-[#333333]">Posted Internships</CardTitle>
+            <CardTitle className="text-[#333333]">Posted Internship</CardTitle>
             <CardDescription>Manage your internship postings and review applications</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
-              {postedInternships.map((internship) => (
-                <div key={internship.id} className="border border-gray-200 rounded-lg p-6">
+              {postedInternship.map((internship) => (
+                <div key={internship.id} className="border border-gray-200 rounded-xl p-6">
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 gap-2">
                     <div>
                       <h3 className="text-lg font-semibold text-[#333333]">{internship.title}</h3>
@@ -363,7 +364,7 @@ const CompanyDashboard = () => {
                     <h4 className="font-medium text-[#333333]">Recent Applicants</h4>
                     <div className="space-y-3">
                       {internship.applicants.map((applicant, index) => (
-                        <div key={index} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 bg-gray-50 rounded-lg gap-3">
+                        <div key={index} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 bg-gray-50 rounded-xl gap-3">
                           <div className="flex-1">
                             <span className="font-medium text-[#333333]">{applicant.name}</span>
                             <p className="text-xs text-gray-500">{applicant.skills}</p>
@@ -374,7 +375,7 @@ const CompanyDashboard = () => {
                               size="sm" 
                               variant="outline"
                               onClick={() => handleViewProfile(applicant)}
-                              className="rounded-lg"
+                              className="rounded-xl"
                             >
                               View Profile
                             </Button>
@@ -382,7 +383,7 @@ const CompanyDashboard = () => {
                               <Button 
                                 size="sm"
                                 onClick={() => handleShortlist(applicant.name)}
-                                className="bg-[#0A66C2] hover:bg-[#004182] text-white rounded-lg"
+                                className="bg-[#0A66C2] hover:bg-[#004182] text-white rounded-xl"
                               >
                                 Shortlist
                               </Button>
@@ -391,7 +392,7 @@ const CompanyDashboard = () => {
                               <Button 
                                 size="sm"
                                 onClick={() => handleScheduleInterview(applicant.name)}
-                                className="bg-[#1E90FF] hover:bg-[#0A66C2] text-white rounded-lg"
+                                className="bg-[#1E90FF] hover:bg-[#0A66C2] text-white rounded-xl"
                               >
                                 Interview
                               </Button>
@@ -407,7 +408,7 @@ const CompanyDashboard = () => {
                       variant="outline" 
                       size="sm"
                       onClick={() => handleViewAllApplications(internship.title)}
-                      className="rounded-lg"
+                      className="rounded-xl"
                     >
                       View All Applications
                     </Button>

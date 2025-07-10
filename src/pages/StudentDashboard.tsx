@@ -20,7 +20,7 @@ const StudentDashboard = () => {
     coursesCompleted: 3,
   };
 
-  // Unique recent activity
+  // Unique recent activity (no duplicates)
   const recentActivity = [
     { id: 1, action: 'Applied to Frontend Developer Intern at TechCorp', time: '3 hours ago', status: 'pending' },
     { id: 2, action: 'Profile viewed by Google Recruiter', time: '1 day ago', status: 'viewed' },
@@ -28,8 +28,8 @@ const StudentDashboard = () => {
     { id: 4, action: 'Interview invite from InnovateLab', time: '3 days ago', status: 'interview' },
   ];
 
-  // Unique recommended internships
-  const recommendedInternships = [
+  // Unique recommended internship (no duplicates)
+  const recommendedInternship = [
     {
       id: 1,
       title: 'Full Stack Developer Intern',
@@ -59,7 +59,7 @@ const StudentDashboard = () => {
     },
   ];
 
-  // Free courses with certificates
+  // Free courses with certificates (unique entries)
   const freeCourses = [
     {
       id: 1,
@@ -81,9 +81,9 @@ const StudentDashboard = () => {
 
   const handleApplyNow = (internshipTitle: string) => {
     toast({
-      title: "🎉 Application Submitted!",
-      description: `Your application for ${internshipTitle} has been submitted successfully. You'll hear back soon!`,
-      className: "bg-green-50 border-green-200 rounded-lg",
+      title: "🎉 Application Submitted Successfully!",
+      description: `Your application for ${internshipTitle} has been submitted. You'll hear back soon!`,
+      className: "bg-green-50 border-green-200 rounded-xl shadow-lg",
     });
   };
 
@@ -91,7 +91,7 @@ const StudentDashboard = () => {
     toast({
       title: "📚 Enrolled Successfully!",
       description: `You've enrolled in ${courseTitle}. Start learning now and earn your certificate!`,
-      className: "bg-blue-50 border-blue-200 rounded-lg",
+      className: "bg-blue-50 border-blue-200 rounded-xl shadow-lg",
     });
   };
 
@@ -122,7 +122,7 @@ const StudentDashboard = () => {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="rounded-lg border-0 shadow-md">
+          <Card className="rounded-xl border-0 shadow-md">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-[#333333]">Applications</CardTitle>
               <Send className="h-4 w-4 text-[#0A66C2]" />
@@ -133,7 +133,7 @@ const StudentDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="rounded-lg border-0 shadow-md">
+          <Card className="rounded-xl border-0 shadow-md">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-[#333333]">Profile Views</CardTitle>
               <Eye className="h-4 w-4 text-[#0A66C2]" />
@@ -144,7 +144,7 @@ const StudentDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="rounded-lg border-0 shadow-md">
+          <Card className="rounded-xl border-0 shadow-md">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-[#333333]">Interview Invites</CardTitle>
               <Star className="h-4 w-4 text-[#0A66C2]" />
@@ -155,7 +155,7 @@ const StudentDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="rounded-lg border-0 shadow-md">
+          <Card className="rounded-xl border-0 shadow-md">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-[#333333]">Courses Completed</CardTitle>
               <Award className="h-4 w-4 text-[#0A66C2]" />
@@ -170,7 +170,7 @@ const StudentDashboard = () => {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Recent Activity */}
           <div className="lg:col-span-2">
-            <Card className="rounded-lg border-0 shadow-md">
+            <Card className="rounded-xl border-0 shadow-md">
               <CardHeader>
                 <CardTitle className="text-[#333333]">Recent Activity</CardTitle>
                 <CardDescription>Your latest applications and achievements</CardDescription>
@@ -178,7 +178,7 @@ const StudentDashboard = () => {
               <CardContent>
                 <div className="space-y-4">
                   {recentActivity.map((activity) => (
-                    <div key={activity.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                    <div key={activity.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
                       <div className="flex-1">
                         <p className="text-sm font-medium text-[#333333]">{activity.action}</p>
                         <p className="text-xs text-gray-500">{activity.time}</p>
@@ -188,10 +188,10 @@ const StudentDashboard = () => {
                   ))}
                 </div>
                 <div className="mt-6 space-y-2">
-                  <Button asChild variant="outline" className="w-full rounded-lg border-[#0A66C2] text-[#0A66C2] hover:bg-[#0A66C2] hover:text-white">
+                  <Button asChild variant="outline" className="w-full rounded-xl border-[#0A66C2] text-[#0A66C2] hover:bg-[#0A66C2] hover:text-white">
                     <Link to="/notifications">View All Activity</Link>
                   </Button>
-                  <Button asChild className="w-full bg-[#0A66C2] hover:bg-[#004182] rounded-lg">
+                  <Button asChild className="w-full bg-[#0A66C2] hover:bg-[#004182] rounded-xl">
                     <Link to="/achievements">View Achievements</Link>
                   </Button>
                 </div>
@@ -201,16 +201,16 @@ const StudentDashboard = () => {
 
           {/* Recommended Section */}
           <div className="space-y-6">
-            {/* Recommended Internships */}
-            <Card className="rounded-lg border-0 shadow-md">
+            {/* Recommended Internship (Fixed spelling) */}
+            <Card className="rounded-xl border-0 shadow-md">
               <CardHeader>
-                <CardTitle className="text-[#333333]">Recommended Internships</CardTitle>
+                <CardTitle className="text-[#333333]">Recommended Internship</CardTitle>
                 <CardDescription>Matches based on your profile</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {recommendedInternships.map((internship) => (
-                    <div key={internship.id} className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+                  {recommendedInternship.map((internship) => (
+                    <div key={internship.id} className="p-4 border border-gray-200 rounded-xl hover:shadow-md transition-shadow">
                       <div className="flex items-start justify-between mb-2">
                         <h4 className="font-medium text-sm text-[#333333]">{internship.title}</h4>
                         <Briefcase className="h-4 w-4 text-[#0A66C2]" />
@@ -223,7 +223,7 @@ const StudentDashboard = () => {
                       </div>
                       <Button 
                         size="sm" 
-                        className="w-full bg-[#0A66C2] hover:bg-[#004182] rounded-lg"
+                        className="w-full bg-[#0A66C2] hover:bg-[#004182] rounded-xl"
                         onClick={() => handleApplyNow(internship.title)}
                       >
                         Apply Now
@@ -232,15 +232,15 @@ const StudentDashboard = () => {
                   ))}
                 </div>
                 <div className="mt-4">
-                  <Button asChild variant="outline" className="w-full rounded-lg border-[#0A66C2] text-[#0A66C2] hover:bg-[#0A66C2] hover:text-white">
-                    <Link to="/internships">Browse All Internships</Link>
+                  <Button asChild variant="outline" className="w-full rounded-xl border-[#0A66C2] text-[#0A66C2] hover:bg-[#0A66C2] hover:text-white">
+                    <Link to="/internships">Browse All Internship</Link>
                   </Button>
                 </div>
               </CardContent>
             </Card>
 
             {/* Free Courses */}
-            <Card className="rounded-lg border-0 shadow-md">
+            <Card className="rounded-xl border-0 shadow-md">
               <CardHeader>
                 <CardTitle className="text-[#333333]">Free Courses with Certificates</CardTitle>
                 <CardDescription>Enhance your skills</CardDescription>
@@ -248,7 +248,7 @@ const StudentDashboard = () => {
               <CardContent>
                 <div className="space-y-4">
                   {freeCourses.map((course) => (
-                    <div key={course.id} className="p-4 border border-gray-200 rounded-lg">
+                    <div key={course.id} className="p-4 border border-gray-200 rounded-xl">
                       <div className="flex items-start justify-between mb-2">
                         <h4 className="font-medium text-sm text-[#333333]">{course.title}</h4>
                         <BookOpen className="h-4 w-4 text-[#0A66C2]" />
@@ -259,7 +259,7 @@ const StudentDashboard = () => {
                       </div>
                       <Button 
                         size="sm" 
-                        className="w-full bg-[#1E90FF] hover:bg-[#0A66C2] rounded-lg"
+                        className="w-full bg-[#1E90FF] hover:bg-[#0A66C2] rounded-xl"
                         onClick={() => handleEnrollCourse(course.title)}
                       >
                         Enroll Free + Certificate
@@ -268,7 +268,7 @@ const StudentDashboard = () => {
                   ))}
                 </div>
                 <div className="mt-4">
-                  <Button asChild variant="outline" className="w-full rounded-lg border-[#0A66C2] text-[#0A66C2] hover:bg-[#0A66C2] hover:text-white">
+                  <Button asChild variant="outline" className="w-full rounded-xl border-[#0A66C2] text-[#0A66C2] hover:bg-[#0A66C2] hover:text-white">
                     <Link to="/free-courses">View All Free Courses</Link>
                   </Button>
                 </div>

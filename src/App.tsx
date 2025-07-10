@@ -20,6 +20,7 @@ import Messages from "./pages/Messages";
 import Notifications from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
 import ViewProfile from "./pages/ViewProfile";
+import ViewAllApplications from "./pages/ViewAllApplications";
 import Achievements from "./pages/Achievements";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -54,6 +55,11 @@ const App = () => (
             <Route path="/view-profile" element={
               <ProtectedRoute userType="company">
                 <ViewProfile />
+              </ProtectedRoute>
+            } />
+            <Route path="/view-all-applications" element={
+              <ProtectedRoute userType="company">
+                <ViewAllApplications />
               </ProtectedRoute>
             } />
             <Route path="/internships" element={
