@@ -1,12 +1,10 @@
-
 import { useState } from 'react';
 import Navigation from '../components/Navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MapPin, Clock, Users, Building } from 'lucide-react';
+import { Briefcase, Search } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const FreeInternships = () => {
@@ -15,61 +13,8 @@ const FreeInternships = () => {
   const [locationFilter, setLocationFilter] = useState('');
   const [domainFilter, setDomainFilter] = useState('');
 
-  // Mock free internships data
-  const freeInternships = [
-    {
-      id: 1,
-      title: 'Content Writing Intern',
-      company: 'BlogCorp',
-      location: 'Remote',
-      duration: '3 months',
-      domain: 'Content',
-      description: 'Create engaging blog posts and articles for various clients',
-      requirements: 'Excellent writing skills, creativity, basic SEO knowledge',
-      posted: '1 day ago',
-      applicants: 23,
-      benefits: 'Certificate, Portfolio building, Mentorship',
-    },
-    {
-      id: 2,
-      title: 'Social Media Intern',
-      company: 'StartupXYZ',
-      location: 'Pune, Maharashtra',
-      duration: '4 months',
-      domain: 'Marketing',
-      description: 'Manage social media accounts and create engaging content',
-      requirements: 'Social media knowledge, creative thinking',
-      posted: '3 days ago',
-      applicants: 18,
-      benefits: 'Certificate, Experience letter, Networking',
-    },
-    {
-      id: 3,
-      title: 'UI/UX Design Intern',
-      company: 'Design Hub',
-      location: 'Chennai, Tamil Nadu',
-      duration: '6 months',
-      domain: 'Design',
-      description: 'Work on user interface designs for mobile and web applications',
-      requirements: 'Figma, Adobe XD, basic design principles',
-      posted: '1 week ago',
-      applicants: 41,
-      benefits: 'Certificate, Portfolio projects, Mentorship',
-    },
-    {
-      id: 4,
-      title: 'Research Intern',
-      company: 'Academic Institute',
-      location: 'Kolkata, West Bengal',
-      duration: '5 months',
-      domain: 'Research',
-      description: 'Assist in research projects and data collection',
-      requirements: 'Research methodology, analytical skills',
-      posted: '4 days ago',
-      applicants: 15,
-      benefits: 'Certificate, Research experience, Publications',
-    },
-  ];
+  // Real free internships - empty by default, would come from database
+  const freeInternships: any[] = [];
 
   const filteredInternships = freeInternships.filter(internship => {
     const matchesSearch = internship.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -82,8 +27,9 @@ const FreeInternships = () => {
 
   const handleApply = (internshipId: number, title: string) => {
     toast({
-      title: "Application Submitted!",
+      title: "🎉 Application Submitted!",
       description: `Your application for ${title} has been submitted successfully.`,
+      className: "bg-green-50 border-green-200 rounded-xl shadow-lg",
     });
   };
 
@@ -98,93 +44,61 @@ const FreeInternships = () => {
         </div>
 
         {/* Filters */}
-        <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Input
-            placeholder="Search internships or companies..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <Input
-            placeholder="Filter by location..."
-            value={locationFilter}
-            onChange={(e) => setLocationFilter(e.target.value)}
-          />
-          <Select value={domainFilter} onValueChange={setDomainFilter}>
-            <SelectTrigger>
-              <SelectValue placeholder="Filter by domain" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Domains</SelectItem>
-              <SelectItem value="Technology">Technology</SelectItem>
-              <SelectItem value="Marketing">Marketing</SelectItem>
-              <SelectItem value="Design">Design</SelectItem>
-              <SelectItem value="Content">Content</SelectItem>
-              <SelectItem value="Research">Research</SelectItem>
-            </SelectContent>
-          </Select>
+        <div className="mb-8 space-y-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Input
+              placeholder="Search internships, companies, or skills..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 rounded-xl border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2]"
+            />
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              placeholder="Filter by location..."
+              value={locationFilter}
+              onChange={(e) => setLocationFilter(e.target.value)}
+              className="rounded-xl border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2]"
+            />
+            <Select value={domainFilter} onValueChange={setDomainFilter}>
+              <SelectTrigger className="rounded-xl border-gray-300">
+                <SelectValue placeholder="Filter by domain" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Domains</SelectItem>
+                <SelectItem value="Technology">Technology</SelectItem>
+                <SelectItem value="Marketing">Marketing</SelectItem>
+                <SelectItem value="Design">Design</SelectItem>
+                <SelectItem value="Content">Content</SelectItem>
+                <SelectItem value="Research">Research</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
-        {/* Internships Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredInternships.map((internship) => (
-            <Card key={internship.id} className="hover:shadow-lg transition-shadow cursor-pointer">
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-lg">{internship.title}</CardTitle>
-                    <CardDescription className="flex items-center mt-1">
-                      <Building className="h-4 w-4 mr-1" />
-                      {internship.company}
-                    </CardDescription>
-                  </div>
-                  <Badge variant="outline" className="bg-blue-50 text-blue-700">
-                    Experience
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex items-center text-sm text-gray-600">
-                    <MapPin className="h-4 w-4 mr-1" />
-                    {internship.location}
-                  </div>
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Clock className="h-4 w-4 mr-1" />
-                    {internship.duration}
-                  </div>
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Users className="h-4 w-4 mr-1" />
-                    {internship.applicants} applicants
-                  </div>
-                  
-                  <p className="text-sm text-gray-700 line-clamp-2">
-                    {internship.description}
-                  </p>
-                  
-                  <div className="space-y-2">
-                    <Badge variant="outline">{internship.domain}</Badge>
-                    <p className="text-xs text-green-600 font-medium">
-                      Benefits: {internship.benefits}
-                    </p>
-                  </div>
-                  
-                  <div className="flex justify-between items-center pt-4">
-                    <span className="text-xs text-gray-500">{internship.posted}</span>
-                    <Button 
-                      onClick={() => handleApply(internship.id, internship.title)}
-                      variant="outline"
-                      className="border-blue-600 text-blue-600 hover:bg-blue-50"
-                    >
-                      Apply Now
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        {/* Empty State or Internships Grid */}
+        {freeInternships.length === 0 ? (
+          <div className="text-center py-16">
+            <Briefcase className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">No Free Internships Available Yet</h3>
+            <p className="text-gray-500 mb-6">Check back soon for new free internship opportunities with certificates</p>
+            <Button className="bg-[#0A66C2] hover:bg-[#004182] rounded-xl">
+              Browse Paid Internships
+            </Button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredInternships.map((internship) => (
+              <Card key={internship.id} className="hover:shadow-lg transition-shadow cursor-pointer rounded-xl border-0 shadow-md">
+                {/* Real internship content would be rendered here */}
+              </Card>
+            ))}
+          </div>
+        )}
 
-        {filteredInternships.length === 0 && (
+        {filteredInternships.length === 0 && freeInternships.length > 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500">No free internships found matching your criteria.</p>
           </div>
