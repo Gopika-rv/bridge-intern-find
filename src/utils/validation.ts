@@ -58,6 +58,7 @@ export const getValidationErrors = (formData: any, isCompany: boolean = false) =
     errors.push(isCompany ? 'Company name must be at least 2 characters' : 'Name must be at least 2 characters');
   }
   
+  // Updated validation - allow any company email, not just Gmail
   if (isCompany) {
     if (!validateCompanyEmail(formData.email || '')) {
       errors.push('Email must be a valid company email address');

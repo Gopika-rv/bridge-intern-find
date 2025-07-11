@@ -4,80 +4,29 @@ import Navigation from '../components/Navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Briefcase, Eye, Send, Star, TrendingUp, BookOpen, Award } from 'lucide-react';
+import { Briefcase, Eye, Send, Star, TrendingUp, BookOpen, Award, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { Input } from '@/components/ui/input';
+import { useState } from 'react';
 
 const StudentDashboard = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const [searchTerm, setSearchTerm] = useState('');
 
-  // Unique stats for each user
+  // Real stats - these would come from actual database
   const stats = {
-    applicationsSubmitted: 5,
-    profileViews: 18,
-    interviewInvites: 2,
-    coursesCompleted: 3,
+    applicationsSubmitted: 0,
+    profileViews: 0,
+    interviewInvites: 0,
+    coursesCompleted: 0,
   };
 
-  // Unique recent activity (no duplicates)
-  const recentActivity = [
-    { id: 1, action: 'Applied to Frontend Developer Intern at TechCorp', time: '3 hours ago', status: 'pending' },
-    { id: 2, action: 'Profile viewed by Google Recruiter', time: '1 day ago', status: 'viewed' },
-    { id: 3, action: 'Completed React Fundamentals Course', time: '2 days ago', status: 'completed' },
-    { id: 4, action: 'Interview invite from InnovateLab', time: '3 days ago', status: 'interview' },
-  ];
-
-  // Unique recommended internship (no duplicates)
-  const recommendedInternship = [
-    {
-      id: 1,
-      title: 'Full Stack Developer Intern',
-      company: 'TechStart Inc.',
-      location: 'Remote',
-      stipend: '₹25,000/month',
-      type: 'Paid',
-      postedDate: '1 day ago',
-    },
-    {
-      id: 2,
-      title: 'UI/UX Design Intern',
-      company: 'Creative Studio',
-      location: 'Bangalore, IN',
-      stipend: '₹20,000/month',
-      type: 'Paid',
-      postedDate: '2 days ago',
-    },
-    {
-      id: 3,
-      title: 'Content Writing Intern',
-      company: 'Digital Agency',
-      location: 'Mumbai, IN',
-      stipend: 'Certificate',
-      type: 'Free',
-      postedDate: '3 days ago',
-    },
-  ];
-
-  // Free courses with certificates (unique entries)
-  const freeCourses = [
-    {
-      id: 1,
-      title: 'React Development Bootcamp',
-      duration: '4 weeks',
-      students: 1250,
-      rating: 4.8,
-      category: 'Technology'
-    },
-    {
-      id: 2,
-      title: 'Digital Marketing Essentials',
-      duration: '3 weeks',
-      students: 890,
-      rating: 4.6,
-      category: 'Marketing'
-    },
-  ];
+  // Empty arrays - real data would come from database
+  const recentActivity = [];
+  const recommendedInternship = [];
+  const freeCourses = [];
 
   const handleApplyNow = (internshipTitle: string) => {
     toast({
@@ -95,21 +44,6 @@ const StudentDashboard = () => {
     });
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'pending':
-        return <Badge variant="secondary" className="rounded-full">Pending</Badge>;
-      case 'viewed':
-        return <Badge variant="outline" className="rounded-full">Viewed</Badge>;
-      case 'interview':
-        return <Badge className="bg-green-100 text-green-800 rounded-full">Interview</Badge>;
-      case 'completed':
-        return <Badge className="bg-blue-100 text-blue-800 rounded-full">Completed</Badge>;
-      default:
-        return <Badge variant="secondary" className="rounded-full">{status}</Badge>;
-    }
-  };
-
   return (
     <div className="min-h-screen bg-[#F3F6F8]">
       <Navigation />
@@ -118,6 +52,24 @@ const StudentDashboard = () => {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-[#333333]">Welcome back, {user?.name}!</h1>
           <p className="text-gray-600 mt-2">Here's what's happening with your internship search</p>
+        </div>
+
+        {/* Dynamic Search Bar */}
+        <div className="mb-8">
+          <div className="relative max-w-2xl mx-auto">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <Input
+              placeholder="Search internships, companies, skills..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-12 h-12 rounded-xl border-gray-300 focus:border-[#0A66C2] focus:ring-[#0A66C2] text-lg"
+            />
+          </div>
+          <div className="text-center mt-4">
+            <Button asChild className="bg-[#0A66C2] hover:bg-[#004182] rounded-xl px-8">
+              <Link to="/paid-internships">Browse All Internships</Link>
+            </Button>
+          </div>
         </div>
 
         {/* Stats Cards */}
@@ -176,17 +128,17 @@ const StudentDashboard = () => {
                 <CardDescription>Your latest applications and achievements</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {recentActivity.map((activity) => (
-                    <div key={activity.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-[#333333]">{activity.action}</p>
-                        <p className="text-xs text-gray-500">{activity.time}</p>
-                      </div>
-                      {getStatusBadge(activity.status)}
-                    </div>
-                  ))}
-                </div>
+                {recentActivity.length === 0 ? (
+                  <div className="text-center py-12">
+                    <TrendingUp className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-500 mb-4">No recent activity yet</p>
+                    <p className="text-sm text-gray-400">Start applying to internships to see your activity here</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {/* Real activity data would be mapped here */}
+                  </div>
+                )}
                 <div className="mt-6 space-y-2">
                   <Button asChild variant="outline" className="w-full rounded-xl border-[#0A66C2] text-[#0A66C2] hover:bg-[#0A66C2] hover:text-white">
                     <Link to="/notifications">View All Activity</Link>
@@ -201,36 +153,27 @@ const StudentDashboard = () => {
 
           {/* Recommended Section */}
           <div className="space-y-6">
-            {/* Recommended Internship (Fixed spelling) */}
+            {/* Recommended Internships */}
             <Card className="rounded-xl border-0 shadow-md">
               <CardHeader>
                 <CardTitle className="text-[#333333]">Recommended Internship</CardTitle>
                 <CardDescription>Matches based on your profile</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {recommendedInternship.map((internship) => (
-                    <div key={internship.id} className="p-4 border border-gray-200 rounded-xl hover:shadow-md transition-shadow">
-                      <div className="flex items-start justify-between mb-2">
-                        <h4 className="font-medium text-sm text-[#333333]">{internship.title}</h4>
-                        <Briefcase className="h-4 w-4 text-[#0A66C2]" />
-                      </div>
-                      <p className="text-sm text-gray-600 mb-1">{internship.company}</p>
-                      <p className="text-xs text-gray-500 mb-2">{internship.location}</p>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-sm font-medium text-green-600">{internship.stipend}</span>
-                        <Badge variant="outline" className="rounded-full text-xs">{internship.type}</Badge>
-                      </div>
-                      <Button 
-                        size="sm" 
-                        className="w-full bg-[#0A66C2] hover:bg-[#004182] rounded-xl"
-                        onClick={() => handleApplyNow(internship.title)}
-                      >
-                        Apply Now
-                      </Button>
-                    </div>
-                  ))}
-                </div>
+                {recommendedInternship.length === 0 ? (
+                  <div className="text-center py-8">
+                    <Briefcase className="h-10 w-10 text-gray-300 mx-auto mb-3" />
+                    <p className="text-gray-500 mb-2">No recommendations yet</p>
+                    <p className="text-sm text-gray-400 mb-4">Complete your profile to get personalized recommendations</p>
+                    <Button asChild size="sm" className="bg-[#0A66C2] hover:bg-[#004182] rounded-xl">
+                      <Link to="/profile">Complete Profile</Link>
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {/* Real internship recommendations would be mapped here */}
+                  </div>
+                )}
                 <div className="mt-4">
                   <Button asChild variant="outline" className="w-full rounded-xl border-[#0A66C2] text-[#0A66C2] hover:bg-[#0A66C2] hover:text-white">
                     <Link to="/internships">Browse All Internship</Link>
@@ -246,27 +189,20 @@ const StudentDashboard = () => {
                 <CardDescription>Enhance your skills</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {freeCourses.map((course) => (
-                    <div key={course.id} className="p-4 border border-gray-200 rounded-xl">
-                      <div className="flex items-start justify-between mb-2">
-                        <h4 className="font-medium text-sm text-[#333333]">{course.title}</h4>
-                        <BookOpen className="h-4 w-4 text-[#0A66C2]" />
-                      </div>
-                      <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
-                        <span>{course.duration}</span>
-                        <span>⭐ {course.rating}</span>
-                      </div>
-                      <Button 
-                        size="sm" 
-                        className="w-full bg-[#1E90FF] hover:bg-[#0A66C2] rounded-xl"
-                        onClick={() => handleEnrollCourse(course.title)}
-                      >
-                        Enroll Free + Certificate
-                      </Button>
-                    </div>
-                  ))}
-                </div>
+                {freeCourses.length === 0 ? (
+                  <div className="text-center py-8">
+                    <BookOpen className="h-10 w-10 text-gray-300 mx-auto mb-3" />
+                    <p className="text-gray-500 mb-2">No courses available yet</p>
+                    <p className="text-sm text-gray-400 mb-4">Check back soon for new courses</p>
+                    <Button asChild size="sm" className="bg-[#1E90FF] hover:bg-[#0A66C2] rounded-xl">
+                      <Link to="/free-courses">Explore Courses</Link>
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {/* Real course data would be mapped here */}
+                  </div>
+                )}
                 <div className="mt-4">
                   <Button asChild variant="outline" className="w-full rounded-xl border-[#0A66C2] text-[#0A66C2] hover:bg-[#0A66C2] hover:text-white">
                     <Link to="/free-courses">View All Free Courses</Link>

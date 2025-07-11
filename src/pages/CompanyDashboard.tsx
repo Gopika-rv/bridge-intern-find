@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import Navigation from '../components/Navigation';
@@ -33,42 +32,16 @@ const CompanyDashboard = () => {
     internshipType: 'paid',
   });
 
-  // Real stats (no dummy data)
+  // Real stats - these would come from actual database
   const stats = {
-    activeInternship: 2,
-    totalApplications: 18,
-    interviewsScheduled: 3,
-    positionsHired: 1,
+    activeInternship: 0,
+    totalApplications: 0,
+    interviewsScheduled: 0,
+    positionsHired: 0,
   };
 
-  // Real internship data (removed duplicates)
-  const postedInternship = [
-    {
-      id: 1,
-      title: 'Frontend Developer Intern',
-      applications: 8,
-      status: 'active',
-      postedDate: '2 days ago',
-      type: 'paid',
-      stipend: '₹30,000/month',
-      applicants: [
-        { name: 'Priya Sharma', status: 'pending', email: 'priya@gmail.com', phone: '9876543210', skills: 'React, JavaScript, CSS' },
-        { name: 'Rahul Kumar', status: 'shortlisted', email: 'rahul@gmail.com', phone: '9876543211', skills: 'Vue.js, Node.js, MongoDB' },
-      ]
-    },
-    {
-      id: 2,
-      title: 'Data Analyst Intern',
-      applications: 5,
-      status: 'active',
-      postedDate: '5 days ago',
-      type: 'paid',
-      stipend: '₹25,000/month',
-      applicants: [
-        { name: 'Vikram Singh', status: 'shortlisted', email: 'vikram@gmail.com', phone: '9876543213', skills: 'Python, SQL, Tableau' },
-      ]
-    },
-  ];
+  // Empty array - real data would come from database
+  const postedInternship = [];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setNewInternship({
@@ -122,21 +95,6 @@ const CompanyDashboard = () => {
 
   const handleViewAllApplications = (internshipTitle: string) => {
     navigate('/view-all-applications', { state: { internshipTitle } });
-  };
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'pending':
-        return <Badge variant="secondary" className="rounded-full">Pending</Badge>;
-      case 'shortlisted':
-        return <Badge className="bg-blue-100 text-blue-800 rounded-full">Shortlisted</Badge>;
-      case 'interviewed':
-        return <Badge className="bg-yellow-100 text-yellow-800 rounded-full">Interviewed</Badge>;
-      case 'hired':
-        return <Badge className="bg-green-100 text-green-800 rounded-full">Hired</Badge>;
-      default:
-        return <Badge variant="secondary" className="rounded-full">{status}</Badge>;
-    }
   };
 
   return (
@@ -329,86 +287,31 @@ const CompanyDashboard = () => {
           </Card>
         </div>
 
-        {/* Posted Internship */}
+        {/* Posted Internships */}
         <Card className="rounded-xl border-0 shadow-md">
           <CardHeader>
             <CardTitle className="text-[#333333]">Posted Internship</CardTitle>
             <CardDescription>Manage your internship postings and review applications</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-6">
-              {postedInternship.map((internship) => (
-                <div key={internship.id} className="border border-gray-200 rounded-xl p-6">
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 gap-2">
-                    <div>
-                      <h3 className="text-lg font-semibold text-[#333333]">{internship.title}</h3>
-                      <p className="text-sm text-gray-500">Posted {internship.postedDate}</p>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Badge variant="outline" className="rounded-full">{internship.applications} applications</Badge>
-                      <Badge className="bg-green-100 text-green-800 rounded-full">
-                        {internship.type === 'paid' ? `Paid - ${internship.stipend}` : 'Free - Certificate'}
-                      </Badge>
-                      <Badge className="bg-green-100 text-green-800 rounded-full">{internship.status}</Badge>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-3">
-                    <h4 className="font-medium text-[#333333]">Recent Applicants</h4>
-                    <div className="space-y-3">
-                      {internship.applicants.map((applicant, index) => (
-                        <div key={index} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 bg-gray-50 rounded-xl gap-3">
-                          <div className="flex-1">
-                            <span className="font-medium text-[#333333]">{applicant.name}</span>
-                            <p className="text-xs text-gray-500">{applicant.skills}</p>
-                          </div>
-                          <div className="flex items-center flex-wrap gap-2">
-                            {getStatusBadge(applicant.status)}
-                            <Button 
-                              size="sm" 
-                              variant="outline"
-                              onClick={() => handleViewProfile(applicant)}
-                              className="rounded-xl"
-                            >
-                              View Profile
-                            </Button>
-                            {applicant.status === 'pending' && (
-                              <Button 
-                                size="sm"
-                                onClick={() => handleShortlist(applicant.name)}
-                                className="bg-[#0A66C2] hover:bg-[#004182] text-white rounded-xl"
-                              >
-                                Shortlist
-                              </Button>
-                            )}
-                            {applicant.status === 'shortlisted' && (
-                              <Button 
-                                size="sm"
-                                onClick={() => handleScheduleInterview(applicant, internship.title)}
-                                className="bg-[#1E90FF] hover:bg-[#0A66C2] text-white rounded-xl"
-                              >
-                                Schedule Interview
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div className="flex justify-end mt-4 gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => handleViewAllApplications(internship.title)}
-                      className="rounded-xl"
-                    >
-                      View All Applications
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
+            {postedInternship.length === 0 ? (
+              <div className="text-center py-12">
+                <Briefcase className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No Internships Posted Yet</h3>
+                <p className="text-gray-500 mb-6">Start by posting your first internship to attract talented students</p>
+                <Button 
+                  onClick={() => setIsDialogOpen(true)}
+                  className="bg-green-600 hover:bg-green-700 rounded-xl text-white px-6 py-2"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Post Your First Internship
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {/* Real internship data would be mapped here */}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
